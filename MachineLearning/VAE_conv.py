@@ -11,18 +11,18 @@ class ConvVAE(nn.Module):
     def __init__(self):
         super(ConvVAE, self).__init__()
         # Encoder
-        self.enc_conv1 = nn.Conv2d(1, 32, kernel_size=4, stride=2, padding=1)  # 28x28 -> 14x14
-        self.enc_conv2 = nn.Conv2d(32, 64, kernel_size=4, stride=2, padding=1)  # 14x14 -> 7x7
-        self.enc_fc1 = nn.Linear(64 * 7 * 7, 256)
-        self.enc_fc2_mu = nn.Linear(256, 64)  # Latent dimension changed to 64
-        self.enc_fc2_logvar = nn.Linear(256, 64)  # Latent dimension changed to 64
+        self.enc_conv1 = nn.Conv2d(1, 8, kernel_size=4, stride=2, padding=1)  # 28x28 -> 14x14, further reduced filters
+        self.enc_conv2 = nn.Conv2d(8, 16, kernel_size=4, stride=2, padding=1)  # 14x14 -> 7x7, further reduced filters
+        self.enc_fc1 = nn.Linear(16 * 7 * 7, 64)  # further reduced size
+        self.enc_fc2_mu = nn.Linear(64, 20)  # Latent dimension remains 20
+        self.enc_fc2_logvar = nn.Linear(64, 20)  # Latent dimension remains 20
         self.dropout = nn.Dropout(0.5)  # Dropout layer
         
         # Decoder
-        self.dec_fc1 = nn.Linear(64, 256)
-        self.dec_fc2 = nn.Linear(256, 64 * 7 * 7)
-        self.dec_conv1 = nn.ConvTranspose2d(64, 32, kernel_size=4, stride=2, padding=1)  # 7x7 -> 14x14
-        self.dec_conv2 = nn.ConvTranspose2d(32, 1, kernel_size=4, stride=2, padding=1)  # 14x14 -> 28x28
+        self.dec_fc1 = nn.Linear(20, 64)  # further reduced size
+        self.dec_fc2 = nn.Linear(64, 16 * 7 * 7)  # further reduced size
+        self.dec_conv1 = nn.ConvTranspose2d(16, 8, kernel_size=4, stride=2, padding=1)  # 7x7 -> 14x14, further reduced filters
+        self.dec_conv2 = nn.ConvTranspose2d(8, 1, kernel_size=4, stride=2, padding=1)  # 14x14 -> 28x28, further reduced filters
         
         # Activation function
         self.relu = nn.ReLU()
@@ -30,7 +30,7 @@ class ConvVAE(nn.Module):
     def encode(self, x):
         h = self.relu(self.enc_conv1(x))
         h = self.relu(self.enc_conv2(h))
-        h = h.view(-1, 64 * 7 * 7)
+        h = h.view(-1, 16 * 7 * 7)
         h = self.dropout(self.relu(self.enc_fc1(h)))  # Apply dropout
         return self.enc_fc2_mu(h), self.enc_fc2_logvar(h)
     
@@ -42,7 +42,7 @@ class ConvVAE(nn.Module):
     def decode(self, z):
         h = self.relu(self.dec_fc1(z))
         h = self.relu(self.dec_fc2(h))
-        h = h.view(-1, 64, 7, 7)
+        h = h.view(-1, 16, 7, 7)
         h = self.relu(self.dec_conv1(h))
         return torch.sigmoid(self.dec_conv2(h))
     
@@ -82,7 +82,7 @@ def generate_images(model_path, num_images):
     model.load_state_dict(torch.load(model_path))
     model.eval()
     with torch.no_grad():
-        z = torch.randn(num_images, 64).to(device)  # Latent dimension changed to 64
+        z = torch.randn(num_images, 20).to(device)  # Latent dimension changed to 20
         samples = model.decode(z).cpu()
         return samples.view(-1, 1, 28, 28)
 
