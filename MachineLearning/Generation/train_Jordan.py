@@ -3,7 +3,7 @@ import torch.optim as optim
 import torch.nn as nn
 import matplotlib.pyplot as plt
 from JordanRNN import JordanRNN
-from audio_preprocess.audio_dataset import AudioDataset
+from audio_preprocess.audio_dataset import AudioDataset, JordanDataset
 
 # Hyperparameters
 learning_rate = 0.001
@@ -14,7 +14,7 @@ sequence_len = 12000
 audio_dir = 'F:\\Sean\\VerilogWithML\\downsample'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-dataset = AudioDataset(audio_dir=audio_dir, seq_length=sequence_len, device=device)
+dataset = JordanDataset(audio_dir=audio_dir, seq_length=sequence_len, device=device)
 
 # DataLoader
 train_loader = torch.utils.data.DataLoader(
@@ -34,6 +34,8 @@ losses = []
 for epoch in range(num_epochs):
     for inputs, targets in train_loader:
         inputs, targets = inputs.to(device), targets.to(device)  # Move data to GPU
+        print(inputs.shape)
+        print(targets.shape)
         
         # Forward pass
         outputs = model(inputs)
