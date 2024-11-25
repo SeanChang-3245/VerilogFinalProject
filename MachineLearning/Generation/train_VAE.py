@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
 from VAE import SmallLatentAudioGenerator
-from audio_dataset import AudioDataset
+from audio_preprocess.audio_dataset import AudioDataset
 import matplotlib.pyplot as plt
 import os
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
