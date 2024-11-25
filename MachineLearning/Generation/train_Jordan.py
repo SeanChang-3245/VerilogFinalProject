@@ -11,10 +11,10 @@ num_epochs = 100
 output_size = 200  # Example output size, adjust as needed
 batch_size = 8
 sequence_len = 12000
-audio_dir = 'path/to/audio/dir'
+audio_dir = 'F:\\Sean\\VerilogWithML\\downsample'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-dataset = AudioDataset(audio_dir=audio_dir, sequence_len=sequence_len, device=device)
+dataset = AudioDataset(audio_dir=audio_dir, seq_length=sequence_len, device=device)
 
 # DataLoader
 train_loader = torch.utils.data.DataLoader(
@@ -45,7 +45,13 @@ for epoch in range(num_epochs):
         loss.backward()
         optimizer.step()
     
-    print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
+    print(f'Epoch [{epoch+1:3}/{num_epochs}], Loss: {loss.item():.6f}')
+
+
+# Save the model
+model_save_path = './checkpoints/jordan_rnn_checkpoint.pt'
+torch.save(model.state_dict(), model_save_path)
+print(f'Model saved to {model_save_path}')
 
 # Plot the training losses
 plt.plot(losses)
