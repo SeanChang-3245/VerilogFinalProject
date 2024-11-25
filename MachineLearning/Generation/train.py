@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
 from RNN import ElmanRNN
-from audio_dataset import AudioDataset
+from audio_preprocess.audio_dataset import AudioDataset
 import os
 from heapq import heappush, heappop
 
