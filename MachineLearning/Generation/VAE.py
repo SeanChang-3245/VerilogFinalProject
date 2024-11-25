@@ -3,33 +3,38 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class SmallLatentAudioGenerator(nn.Module):
-    def __init__(self, latent_dim=8):
+    def __init__(self, latent_dim=32):
         super().__init__()
         self.target_length = 12000
 
-        # Encoder with new kernel size and stride
+        # Enhanced Encoder
         self.encoder = nn.Sequential(
-            nn.Conv1d(1, 16, kernel_size=25, stride=5, padding=2),  # 2396
+            nn.Conv1d(1, 32, kernel_size=25, stride=5, padding=2),  # 2396
+            nn.BatchNorm1d(32),
             nn.ReLU(),
-            nn.Conv1d(16, 32, kernel_size=25, stride=5, padding=2),  # 476
+            nn.Conv1d(32, 64, kernel_size=25, stride=5, padding=2),  # 476
+            nn.BatchNorm1d(64),
             nn.ReLU(),
-            nn.Conv1d(32, 32, kernel_size=25, stride=5, padding=2),  # 92
+            nn.Conv1d(64, 128, kernel_size=25, stride=5, padding=2),  # 92
+            nn.BatchNorm1d(128),
             nn.ReLU(),
             nn.Flatten()
         )
 
         # Updated dimensions for linear layers
-        self.fc_mu = nn.Linear(32 * 92, latent_dim)
-        self.fc_var = nn.Linear(32 * 92, latent_dim)
-        self.fc_decode = nn.Linear(latent_dim, 32 * 92)
+        self.fc_mu = nn.Linear(128 * 92, latent_dim)
+        self.fc_var = nn.Linear(128 * 92, latent_dim)
+        self.fc_decode = nn.Linear(latent_dim, 128 * 92)
         
-        # Decoder with matching kernel size and stride
+        # Enhanced Decoder
         self.decoder = nn.Sequential(
-            nn.ConvTranspose1d(32, 32, kernel_size=25, stride=5, padding=2),  # 476
+            nn.ConvTranspose1d(128, 64, kernel_size=25, stride=5, padding=2),  # 476
+            nn.BatchNorm1d(64),
             nn.ReLU(),
-            nn.ConvTranspose1d(32, 16, kernel_size=25, stride=5, padding=2),  # 2396
+            nn.ConvTranspose1d(64, 32, kernel_size=25, stride=5, padding=2),  # 2396
+            nn.BatchNorm1d(32),
             nn.ReLU(),
-            nn.ConvTranspose1d(16, 1, kernel_size=25, stride=5, padding=0),   # 12000
+            nn.ConvTranspose1d(32, 1, kernel_size=25, stride=5, padding=0),   # 12000
             nn.Tanh()
         )
 
@@ -47,7 +52,7 @@ class SmallLatentAudioGenerator(nn.Module):
 
     def decode(self, z):
         x = self.fc_decode(z)
-        x = x.view(-1, 32, 92)  # Updated dimension
+        x = x.view(-1, 128, 92)  # Updated dimension
         x = self.decoder(x)
         return x
 

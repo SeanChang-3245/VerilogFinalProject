@@ -1,10 +1,12 @@
 import torch
 import numpy as np
 from VAE import SmallLatentAudioGenerator
+from scipy.io.wavfile import write
 
-def load_model(model_path, latent_dim=8, device='cuda' if torch.cuda.is_available() else 'cpu'):
+def load_model(model_path, latent_dim=32, device='cuda' if torch.cuda.is_available() else 'cpu'):
     model = SmallLatentAudioGenerator(latent_dim=latent_dim)
-    model.load_state_dict(torch.load(model_path, map_location=device))
+    checkpoint = torch.load(model_path, map_location=device)
+    model.load_state_dict(checkpoint['model_state_dict'])
     model.to(device)
     model.eval()
     return model
@@ -51,14 +53,34 @@ def interpolate_latent(start_vector, end_vector, steps=10):
 
 if __name__ == "__main__":
     # Example usage
-    model_path = "vae_checkpoint_epoch_90.pt"
-    model = load_model(model_path)
+    model_path = "./checkpoints/vae_checkpoint_epoch_90.pt"
+    latent_dim = 32  # Ensure this matches the latent_dim in the model
+    model = load_model(model_path, latent_dim=latent_dim)
     
     # Generate a single audio sample
     audio_sample = generate_audio(model, num_samples=1)
+    # Save the generated audio sample
+    file_name = "generated_audio_sample.wav"
+    # Assuming a sample rate of 22050 Hz
+    sample_rate = 4000
+    # Normalize audio to the range [-1, 1]
+    audio_sample = audio_sample / np.max(np.abs(audio_sample))
+    # Save using scipy.io.wavfile
+    write(file_name, sample_rate, audio_sample[0])
+    print(f"Saved {file_name}")
     
     # Generate interpolation between two random latent vectors
-    z1 = np.random.randn(8)  # assuming latent_dim=8
-    z2 = np.random.randn(8)
+    z1 = np.random.randn(latent_dim)  # Use the correct latent_dim
+    z2 = np.random.randn(latent_dim)  # Use the correct latent_dim
     interpolated = interpolate_latent(z1, z2, steps=10)
     interpolated_audio = generate_audio_from_latent(model, interpolated)
+    # Save the generated audio samples
+    for i, audio in enumerate(interpolated_audio):
+        file_name = f"interpolated_audio_sample_{i}.wav"
+        # Assuming a sample rate of 22050 Hz
+        sample_rate = 4000
+        # Normalize audio to the range [-1, 1]
+        audio = audio / np.max(np.abs(audio))
+        # Save using scipy.io.wavfile
+        write(file_name, sample_rate, audio)
+        print(f"Saved {file_name}")

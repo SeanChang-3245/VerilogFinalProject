@@ -37,7 +37,7 @@ def main():
     batch_size = 8
     epochs = 100
     learning_rate = 5e-4
-    latent_dim = 32
+    latent_dim = 32  # Ensure this matches the latent_dim in inference_VAE.py
     seq_length = 12000  # Match with VAE's target_length
     
     # Initialize model and optimizer
@@ -61,7 +61,7 @@ def main():
                 'model_state_dict': model.state_dict(),
                 'optimizer_state_dict': optimizer.state_dict(),
                 'loss': loss,
-            }, f'vae_checkpoint_epoch_{epoch}.pt')
+            }, f'./checkpoints/vae_checkpoint_epoch_{epoch}.pt')
             
         # Plot loss curve
         plt.figure(figsize=(10, 5))
