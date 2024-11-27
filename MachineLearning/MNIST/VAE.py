@@ -19,8 +19,8 @@ class ConvVAE(nn.Module):
         # Decoder
         self.dec_fc1 = nn.Linear(16, 32)  # further reduced size
         self.dec_fc2 = nn.Linear(32, 64 * 7 * 7)  # further reduced size
-        self.dec_conv1 = nn.ConvTranspose2d(64, 32, kernel_size=3, stride=2, padding=1)  # 7x7 -> 14x14, further reduced filters
-        self.dec_conv2 = nn.ConvTranspose2d(32, 1, kernel_size=3, stride=2, padding=1)  # 14x14 -> 28x28, further reduced filters
+        self.dec_conv1 = nn.ConvTranspose2d(64, 32, kernel_size=4, stride=2, padding=1)  # 7x7 -> 14x14, further reduced filters
+        self.dec_conv2 = nn.ConvTranspose2d(32, 1, kernel_size=4, stride=2, padding=1)  # 14x14 -> 28x28, further reduced filters
         
         # Activation function
         self.relu = nn.ReLU()   
