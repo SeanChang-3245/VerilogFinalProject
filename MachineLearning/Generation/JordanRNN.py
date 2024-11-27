@@ -55,8 +55,7 @@ class JordanRNN(nn.Module):
             raise ValueError("Sequence length must be divisible by output size.")
         
         for i in range(self.sequence_len // self.output_size):
-            x_slice = x[:, i*self.output_size:(i+1)*self.output_size]
-            output = self.forward_once(x_slice, prev_output)
+            output = self.forward_once(x, prev_output)
             outputs.append(output)
             prev_output = output
         

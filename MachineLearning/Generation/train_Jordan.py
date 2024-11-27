@@ -25,17 +25,16 @@ train_loader = torch.utils.data.DataLoader(
 
 # Model, loss function, optimizer
 model = JordanRNN(output_size, sequence_len).to(device) 
-criterion = nn.MSELoss()
+criterion = nn.MSELoss() 
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
 losses = []
 
 # Training loop
+model.train()
 for epoch in range(num_epochs):
     for inputs, targets in train_loader:
         inputs, targets = inputs.to(device), targets.to(device)  # Move data to GPU
-        print(inputs.shape)
-        print(targets.shape)
         
         # Forward pass
         outputs = model(inputs)

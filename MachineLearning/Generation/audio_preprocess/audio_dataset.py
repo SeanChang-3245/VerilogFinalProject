@@ -35,7 +35,6 @@ class JordanDataset(Dataset):
         self.device = device
         
         # Load all wav files from directory
-        audio = audio.astype(float) / np.max(np.abs(audio))
         for wav_file in Path(audio_dir).glob("*.wav"):
             sr, audio = wav.read(str(wav_file))
             audio = audio.astype(float) / np.max(np.abs(audio))
@@ -52,6 +51,6 @@ class JordanDataset(Dataset):
     def __getitem__(self, idx):
         segment = self.audio_segments[idx]
         pieces = segment.unfold(0, 200, 200)
-        avg_pieces = pieces.mean(dim=1)
-        return avg_pieces[:], segment[:]  # input, target
+        avg_pieces = pieces.mean(dim=0)
+        return avg_pieces[:], segment[1:]  # input, target
         return segment[:-1], segment[1:]  # input, target
