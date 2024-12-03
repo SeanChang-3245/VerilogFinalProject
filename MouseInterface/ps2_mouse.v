@@ -20,9 +20,9 @@ module ps2_mouse(
    // transforms them into actionable signals.
 
 
-   wire [10:0]                     word1, word2, word3, word4;
-   wire [7:0]                      signal1, signal2, signal3, signal4;
-   wire                            valid, ready;
+   wire [10:0]   word1, word2, word3, word4;
+   wire [7:0]    signal1, signal2, signal3, signal4;
+   wire          valid, ready;
 
    assign o_valid = ready && valid;
 
