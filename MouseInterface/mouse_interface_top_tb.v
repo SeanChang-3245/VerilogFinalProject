@@ -38,7 +38,7 @@ module MouseInterface_top_tb (
 	reg [15:0] to_pos;
 	SevenSegment SevenSeg_Inst( .clk(clk), .rst(rst), .nums(position), .display(DISPLAY), .digit(DIGIT) );
 	// assign postition = (sw) ? {4'd1, x_hundred, x_ten, x_one} : {4'd0, y_hundred, y_ten, y_one};
-	assign postition = to_pos;
+	assign position = to_pos;
 	always @(*) begin
 		if(sw == 1) begin
 			to_pos = {4'b0001, x_hundred, x_ten, x_one};
