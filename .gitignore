@@ -1,6 +1,8 @@
-**/*.runs
-**/*.cache
-**/*.hw
-**/*.ip_user_files
-**/*.sim
+# Verilog Project
+**/*.cache/
+**/*.hw/
+**/*.ip_user_files/
+**/*.runs/
+**/*.sim/
+**/*.srcs/
 **/*.xpr
