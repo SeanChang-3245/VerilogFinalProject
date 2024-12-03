@@ -1,6 +1,7 @@
 module Display_top(
     input wire clk,
     input wire rst,
+    input wire interboard_rst,
     input wire [9:0] mouse_x,
     input wire [8:0] mouse_y,
     input wire [8*18-1:0] sel_card,

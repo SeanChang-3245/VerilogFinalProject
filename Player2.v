@@ -5,8 +5,8 @@ module P2_top (
     input wire btnR,
     input wire [15:0] SW,
     
-    inout request,
-    inout ack,
+    inout Request,
+    inout Ack,
     inout [5:0] interboard_data,
     inout wire PS2_CLK,          // PS2 Mouse
     inout wire PS2_DATA,         // PS2 Mouse
@@ -144,8 +144,8 @@ module P2_top (
         .ctrl_card(ctrl_card),
         .ctrl_sel_len(ctrl_sel_len),
         
-        .request(request),
-        .ack(ack),
+        .Request(Request),
+        .Ack(Ack),
         .interboard_data(interboard_data),
 
         .interboard_rst(interboard_rst),

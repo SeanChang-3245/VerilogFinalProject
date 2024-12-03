@@ -1,6 +1,7 @@
 module RuleCheck_top (
     input wire clk,
     input wire rst,
+    input wire interboard_rst,
     input wire [8*18*6-1:0] map,
 
     output wire rule_valid
