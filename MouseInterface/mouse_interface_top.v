@@ -1,6 +1,7 @@
 module MouseInterface_top (
     input wire clk,
     input wire rst,
+    input wire interboard_rst,
     inout wire PS2_CLK,          // PS2 Mouse
     inout wire PS2_DATA,         // PS2 Mouse
     

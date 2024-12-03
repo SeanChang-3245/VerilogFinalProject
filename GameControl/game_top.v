@@ -3,6 +3,7 @@ module GameControl_top #(
 )(
     input wire clk,
     input wire rst, 
+    input wire interboard_rst,
     input wire start_game,
     input wire rule_valid,
     input wire mouse_valid,
@@ -29,5 +30,23 @@ module GameControl_top #(
 
     output wire [8*18-1:0] sel_card      // to Display, indicate which cards are selected
 );
+
+
+    // Message type definition
+    localparam TABLE_TAKE = 0;
+    localparam TABLE_DOWN = 1;
+    localparam TABLE_SHIFT = 2;
+
+    localparam HAND_TAKE = 3;
+    localparam HAND_DRAW = 4;
+
+    localparam DECK_DRAW = 5;
+
+    localparam STATE_TURN = 6;
+    localparam STATE_RST_TABLE = 7;
+    localparam STATE_RST_GAME = 8;
+    localparam STATE_CHEAT = 9;
+
+
 
 endmodule

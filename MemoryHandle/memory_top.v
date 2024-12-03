@@ -1,7 +1,8 @@
 module MemoryHandle_top(
     input wire clk,
     input wire rst,
-    
+    input wire interboard_rst,
+
     // from GameControl
     input wire ctrl_en,
     input wire ctrl_move_dir,
