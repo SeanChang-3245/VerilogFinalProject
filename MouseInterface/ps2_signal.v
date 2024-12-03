@@ -3,8 +3,8 @@
 module ps2_signal(
                   input wire         i_clk,
                   input wire         i_reset,
-                  input wire         i_PS2Clk,
-                  input wire         i_PS2Data,
+                  inout wire         i_PS2Clk,
+                  inout wire         i_PS2Data,
                   output wire [10:0] o_word1,
                   output wire [10:0] o_word2,
                   output wire [10:0] o_word3,

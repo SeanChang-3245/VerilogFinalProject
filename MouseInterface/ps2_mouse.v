@@ -4,8 +4,8 @@
 module ps2_mouse(
                  input wire        i_clk,
                  input wire        i_reset,
-                 input wire        i_PS2Data,
-                 input wire        i_PS2Clk,
+                 inout wire        i_PS2Data,
+                 inout wire        i_PS2Clk,
                  output wire [7:0] o_x,
                  output wire       o_x_ov,
                  output wire       o_x_sign,
@@ -20,9 +20,9 @@ module ps2_mouse(
    // transforms them into actionable signals.
 
 
-   wire [10:0]                     word1, word2, word3, word4;
-   wire [7:0]                      signal1, signal2, signal3, signal4;
-   wire                            valid, ready;
+   wire [10:0]   word1, word2, word3, word4;
+   wire [7:0]    signal1, signal2, signal3, signal4;
+   wire          valid, ready;
 
    assign o_valid = ready && valid;
 

@@ -37,7 +37,7 @@ module P1_top (
     // directly connect to final output
 
     // MouseInterface output
-    wire mouse_valid;
+    wire mouse_inblock;
     wire l_click;
     wire cheat_activate;
     wire [9:0] mouse_x;
@@ -79,7 +79,7 @@ module P1_top (
         .interboard_rst(interboard_rst),
         .PS2_CLK(PS2_CLK),
         .PS2_DATA(PS2_DATA),
-        .mouse_valid(mouse_valid),
+        .mouse_inblock(mouse_inblock),
         .l_click(l_click),
         .cheat_activate(cheat_activate),
         .mouse_x(mouse_x),
@@ -94,7 +94,7 @@ module P1_top (
         .interboard_rst(interboard_rst),
         .start_game(start_game),
         .rule_valid(rule_valid),
-        .mouse_valid(mouse_valid),
+        .mouse_inblock(mouse_inblock),
         .cheat_activate(cheat_activate),
         .move_left(move_left),
         .move_right(move_right),
