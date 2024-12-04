@@ -20,9 +20,13 @@ module InterboardCommunication_TB(
     wire [5:0] interboard_card;
     wire [2:0] interboard_sel_len;
 
+    wire clk_18;
+    clock_divider #(.n(18)) m18(.clk(clk), .clk_div(clk_18));
+
     wire en_send_db, en_send_op;
-    debounce db(.clk(clk), .pb(en_send), .pb_db(en_send_db));
+    debounce db(.clk(clk_18), .pb(en_send), .pb_db(en_send_db));
     one_pulse op(.clk(clk), .pb_db(en_send_db), .pb_op(en_send_op));
+
 
     InterboardCommunication_top t(
         .clk(clk),

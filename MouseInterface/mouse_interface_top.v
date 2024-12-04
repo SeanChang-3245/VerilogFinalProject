@@ -112,4 +112,8 @@ module MouseInterface_top (
 			mouse_y <= mouse_y_next;
 		end
 	end
+
+	// ILA debug
+	ila_0 ila_0_inst(clk, x, PS2_DATA, x_ov, x_sign, valid);
+
 endmodule
