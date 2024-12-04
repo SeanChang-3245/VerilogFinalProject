@@ -1,7 +1,7 @@
 module InterboardCommunication_TB(
     input wire clk,
     input wire rst,
-    input wire en_send,
+    input wire ctrl_en,
     input wire [15:0] SW,
 
     inout Request,
@@ -23,16 +23,16 @@ module InterboardCommunication_TB(
     wire clk_18;
     clock_divider #(.n(18)) m18(.clk(clk), .clk_div(clk_18));
 
-    wire en_send_db, en_send_op;
-    debounce db(.clk(clk_18), .pb(en_send), .pb_db(en_send_db));
-    one_pulse op(.clk(clk), .pb_db(en_send_db), .pb_op(en_send_op));
+    wire ctrl_en_db, ctrl_en_op;
+    debounce db(.clk(clk), .pb(ctrl_en), .pb_db(ctrl_en_db));
+    one_pulse op(.clk(clk), .pb_db(ctrl_en_db), .pb_op(ctrl_en_op));
 
 
     InterboardCommunication_top t(
         .clk(clk),
         .rst(rst),
         .transmit(SW[15]),
-        .ctrl_en(en_send_op),
+        .ctrl_en(ctrl_en_op),
         .ctrl_move_dir(SW[14]),
         .ctrl_block_x(SW[13:10]),
         .ctrl_block_y(SW[9:7]),
