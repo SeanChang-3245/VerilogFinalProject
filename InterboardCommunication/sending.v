@@ -108,25 +108,25 @@ module send_all(
 
     always@* begin
         next_state = cur_state;
-        if(cur_state == INIT && ctrl_en) begin
+        if(cur_state == INIT && ctrl_en && !en_send) begin
             next_state = STEP_1;
         end
-        else if(cur_state == STEP_1 && ready) begin
+        else if(cur_state == STEP_1 && ready && !en_send) begin
             next_state = STEP_2;
         end
-        else if(cur_state == STEP_2 && ready) begin
+        else if(cur_state == STEP_2 && ready && !en_send) begin
             next_state = STEP_3;
         end
-        else if(cur_state == STEP_3 && ready) begin
+        else if(cur_state == STEP_3 && ready && !en_send) begin
             next_state = STEP_4;
         end
-        else if(cur_state == STEP_4 && ready) begin
+        else if(cur_state == STEP_4 && ready && !en_send) begin
             next_state = STEP_5;
         end
-        else if(cur_state == STEP_5 && ready) begin
+        else if(cur_state == STEP_5 && ready && !en_send) begin
             next_state = STEP_6;
         end
-        else if(cur_state == STEP_6 && ready) begin
+        else if(cur_state == STEP_6 && ready && !en_send) begin
             next_state = INIT;
         end
     end
