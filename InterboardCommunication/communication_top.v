@@ -31,9 +31,9 @@ module InterboardCommunication_top(
     assign Request = transmit ? request_out : 1'bz;
     assign interboard_data = transmit ? data_out : 6'bzz_zzzz;
 
-    assign ack_in = Ack;
-    assign request_in = Request;
-    assign data_in = interboard_data;
+    assign ack_in = Ack;                    // ack_in = transmit ? 1'bz(1'b0) : Ack;
+    assign request_in = Request;            // request_int = transmit ? 1'bz : Request;
+    assign data_in = interboard_data;       // data_in = transmit ? 6'bz : interboard_data;
 
     
     send_all sa (
