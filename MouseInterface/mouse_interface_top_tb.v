@@ -9,8 +9,6 @@ module MouseInterface_top_tb (
 	output wire [3:0] DIGIT
 );	
 	wire mouse_inblock, l_click, cheat_activate;
-	wire [4:0] mouse_block_x;
-	wire [2:0] mouse_block_y;
 	wire [9:0] mouse_x;
 	wire [8:0] mouse_y;
 	assign led[0] = sw;
@@ -23,9 +21,7 @@ module MouseInterface_top_tb (
 		.l_click(l_click),
 		.cheat_activate(cheat_activate),
 		.mouse_x(mouse_x),
-		.mouse_y(mouse_y),
-		.mouse_block_x(mouse_block_x),
-		.mouse_block_y(mouse_block_y)
+		.mouse_y(mouse_y)
 	);
 
 	wire [3:0] x_hundred = mouse_x / 100;
@@ -86,5 +82,15 @@ module MouseInterface_top_tb (
 			led_en_next[1] = 0;
 		end
 	end
+
+	always @(posedge clk, posedge rst) begin
+		if(rst) begin
+			led_en <= 0;
+		end else begin
+			led_en <= led_en_next;
+		end
+	end
+	assign led[1] = led_en[0];
+	assign led[2] = led_en[1];
 
 endmodule
