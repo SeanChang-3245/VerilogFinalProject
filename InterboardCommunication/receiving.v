@@ -39,6 +39,7 @@ module receive_all(
     single_receive sr(
         .clk(clk),
         .rst(rst),
+        .interboard_rst(interboard_rst),
         .Request(Request),
         .interboard_data(interboard_data),
 
@@ -48,7 +49,7 @@ module receive_all(
     );
 
     always@(posedge clk) begin
-        if(rst) begin
+        if(rst || interboard_rst) begin
             cur_state <= WAIT_1;
             stored_msg_type <= 0;
             stored_block_x <= 0;
@@ -128,6 +129,10 @@ module receive_all(
             stored_move_dir_next = cur_data;
         end
     end
+
+    ila_1 ila_inst(clk, done, Ack, cur_data, ready, Request, interboard_data, cur_state, interboard_rst);
+
+
 endmodule
 
 
@@ -135,6 +140,7 @@ endmodule
 module single_receive(
     input wire clk,
     input wire rst, 
+    input wire interboard_rst,
     input wire Request,
     input wire [5:0] interboard_data,   // from other board
   
@@ -142,7 +148,7 @@ module single_receive(
     output wire Ack,
     output wire [5:0] data_out          // to upper layer
 );
-    localparam ACK_TIME = 10;
+    localparam ACK_LENGTH = 10;
   
     localparam WAIT_REQ = 0;
     localparam ACK_STATE = 1;
@@ -150,10 +156,10 @@ module single_receive(
     reg cur_state, next_state;
     reg [9:0] counter, counter_next;
 
-    assign done = (cur_state == ACK_STATE && counter == ACK_STATE);
+    assign done = (cur_state == ACK_STATE && counter == ACK_LENGTH); // one-pulse
 
     always@(posedge clk) begin
-        if(rst) begin
+        if(rst || interboard_rst) begin
             cur_state <= WAIT_REQ;
             counter <= 0;
         end 
@@ -168,7 +174,7 @@ module single_receive(
         if(cur_state == WAIT_REQ && Request) begin
             next_state = ACK_STATE;
         end
-        else if(cur_state == ACK_STATE && counter == ACK_TIME) begin
+        else if(cur_state == ACK_STATE && counter == ACK_LENGTH) begin
             next_state = WAIT_REQ;
         end
     end

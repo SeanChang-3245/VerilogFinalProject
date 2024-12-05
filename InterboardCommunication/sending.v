@@ -198,7 +198,7 @@ module send_all(
         end
     end
 
-    ila_1 ila_inst(clk, en_send, Ack, cur_data, ready, Request, interboard_data, cur_state, ctrl_en);
+    // ila_1 ila_inst(clk, en_send, Ack, cur_data, ready, Request, interboard_data, cur_state, ctrl_en);
 
 endmodule
 

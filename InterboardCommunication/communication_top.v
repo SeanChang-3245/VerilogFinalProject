@@ -31,11 +31,18 @@ module InterboardCommunication_top(
     assign Request = transmit ? request_out : 1'bz;
     assign interboard_data = transmit ? data_out : 6'bzz_zzzz;
 
-    assign ack_in = Ack;                    // ack_in = transmit ? 1'bz(1'b0) : Ack;
-    assign request_in = Request;            // request_int = transmit ? 1'bz : Request;
-    assign data_in = interboard_data;       // data_in = transmit ? 6'bz : interboard_data;
+    // assign ack_in = Ack;                    // ack_in = transmit ? 1'bz(1'b0) : Ack;
+    // assign request_in = Request;            // request_in = transmit ? 1'bz : Request;
+    // assign data_in = interboard_data;       // data_in = transmit ? 6'bz : interboard_data;
 
-    
+    assign ack_in = transmit ? Ack : 1'bz;
+    assign request_in = transmit ? 1'bz : Request;
+    assign data_in = transmit ? 6'bzz_zzzz : interboard_data;
+
+
+    // maybe need to handle rst send to other board at top level
+
+
     send_all sa (
         .clk(clk),
         .rst(rst),
