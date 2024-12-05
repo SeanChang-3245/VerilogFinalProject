@@ -108,9 +108,9 @@ module send_all(
 
     always@* begin
         next_state = cur_state;
-        if(cur_state == INIT && ctrl_en && !en_send) begin
-            next_state = STEP_1;
-        end
+        if(cur_state == INIT && ctrl_en && !en_send) begin // since ready will be pulled down one cycle after en_send is pulled up
+            next_state = STEP_1;                           // and state will be changed at the same time as en_send
+        end                                                // this try to prevent state transit early because ready is not pulled down in time
         else if(cur_state == STEP_1 && ready && !en_send) begin
             next_state = STEP_2;
         end
@@ -131,25 +131,46 @@ module send_all(
         end
     end
 
-    always@* begin
+    // always@* begin
+    //     next_data = cur_data;
+    //     if(cur_state == STEP_1) begin
+    //         next_data = ctrl_msg_type;
+    //     end
+    //     else if(cur_state == STEP_2) begin
+    //         next_data = ctrl_block_x;
+    //     end
+    //     else if(cur_state == STEP_3) begin
+    //         next_data = ctrl_block_y;
+    //     end
+    //     else if(cur_state == STEP_4) begin
+    //         next_data = ctrl_card;
+    //     end
+    //     else if(cur_state == STEP_5) begin
+    //         next_data = ctrl_sel_len;
+    //     end
+    //     else if(cur_state == STEP_6) begin
+    //         next_data = ctrl_move_dir;
+    //     end
+    // end
+    always@* begin                      // prepare the data need to be send in next cycle
         next_data = cur_data;
-        if(cur_state == STEP_1) begin
-            next_data = stored_msg_type;
+        if(cur_state == INIT) begin
+            next_data = ctrl_msg_type;
+        end
+        else if(cur_state == STEP_1) begin
+            next_data = ctrl_block_x;
         end
         else if(cur_state == STEP_2) begin
-            next_data = stored_block_x;
+            next_data = ctrl_block_y;
         end
         else if(cur_state == STEP_3) begin
-            next_data = stored_block_y;
+            next_data = ctrl_card;
         end
         else if(cur_state == STEP_4) begin
-            next_data = stored_card;
+            next_data = ctrl_sel_len;
         end
         else if(cur_state == STEP_5) begin
-            next_data = stored_sel_len;
-        end
-        else if(cur_state == STEP_6) begin
-            next_data = stored_move_dir;
+            next_data = ctrl_move_dir;
         end
     end
 
@@ -177,7 +198,7 @@ module send_all(
         end
     end
 
-    ila_1 ila_inst(clk, en_send, Ack, data_in, ready, Request, interboard_data, cur_state, ctrl_en);
+    ila_1 ila_inst(clk, en_send, Ack, cur_data, ready, Request, interboard_data, cur_state, ctrl_en);
 
 endmodule
 
