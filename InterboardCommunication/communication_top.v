@@ -27,25 +27,54 @@ module InterboardCommunication_top(
     wire ack_in, ack_out;
     wire [5:0] data_in, data_out;
     
-    assign Ack = transmit ? 1'bz : ack_out;
-    assign Request = transmit ? request_out : 1'bz;
-    assign interboard_data = transmit ? data_out : 6'bzz_zzzz;
+    wire delayed_rst;
+    delay_n_cycle #(.n(10)) delay_rst(
+        .clk(clk),
+        .in(rst),
+        .out(delayed_rst)
+    );
+
+    // maybe need to handle rst send to other board at top level
+    reg rst_other, rst_other_next;
+    always@* begin
+        rst_other_next = rst_other;
+        if(rst) begin
+            rst_other_next = 1;
+        end
+    end
+
+    always@(posedge clk) begin
+        if(delayed_rst) begin
+            rst_other <= 0;
+        end
+        else begin
+            rst_other <= rst_other_next;
+        end
+    end
+    
+    // Data out
+    // interboard rst will be triggered if transmit is switcted
+    assign Ack = rst_other ? 1 : (transmit ? 1'bz : ack_out);
+    assign Request = rst_other ? 1 : (transmit ? request_out : 1'bz);
+    assign interboard_data = rst_other ? 1 : (transmit ? data_out : 6'bzz_zzzz);
+
+    // Data in
+    assign ack_in = transmit ? Ack : 1'bz;
+    assign request_in = transmit ? 1'bz : Request;
+    assign data_in = transmit ? 6'bzz_zzzz : interboard_data;
+
+    // rst called by other board
+    assign interboard_rst = ({Ack, Request, interboard_data} == 8'hff);
 
     // assign ack_in = Ack;                    // ack_in = transmit ? 1'bz(1'b0) : Ack;
     // assign request_in = Request;            // request_in = transmit ? 1'bz : Request;
     // assign data_in = interboard_data;       // data_in = transmit ? 6'bz : interboard_data;
 
-    assign ack_in = transmit ? Ack : 1'bz;
-    assign request_in = transmit ? 1'bz : Request;
-    assign data_in = transmit ? 6'bzz_zzzz : interboard_data;
-
-
-    // maybe need to handle rst send to other board at top level
-
 
     send_all sa (
         .clk(clk),
         .rst(rst),
+        .interboard_rst(interboard_rst),
         .Ack(ack_in),
         .ctrl_en(ctrl_en),
         .ctrl_move_dir(ctrl_move_dir),
@@ -62,11 +91,11 @@ module InterboardCommunication_top(
     receive_all ra (
         .clk(clk),
         .rst(rst),
+        .interboard_rst(interboard_rst),
         .Request(request_in),
         .interboard_data(data_in),
         
         .Ack(ack_out),
-        .interboard_rst(interboard_rst),
         .interboard_en(interboard_en),
         .interboard_move_dir(interboard_move_dir),
         .interboard_block_x(interboard_block_x),
@@ -76,6 +105,8 @@ module InterboardCommunication_top(
         .interboard_sel_len(interboard_sel_len)
     );
 
+
+    ila_1 ila_inst(clk, transmit, Ack, interboard_data, Request, ack_in, request_in, ack_out, request_out);
 
 endmodule
 

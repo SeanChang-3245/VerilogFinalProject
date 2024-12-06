@@ -1,11 +1,12 @@
 module receive_all(
     input wire clk,
     input wire rst,
+    input wire interboard_rst,
     input wire Request,
     input wire [5:0] interboard_data,
 
     output wire Ack,
-    output wire interboard_rst,
+    // output wire interboard_rst,
     output wire interboard_en,                  // to upper layer, one-pulse
     output wire [3:0] interboard_msg_type,
     output wire [4:0] interboard_block_x,
@@ -76,7 +77,7 @@ module receive_all(
     assign interboard_card = stored_card;
     assign interboard_sel_len = stored_sel_len;
     assign interboard_move_dir = stored_move_dir;
-    assign interboard_rst = {Request, interboard_data} == 7'b111_1111;
+    // assign interboard_rst = {Request, interboard_data} == 7'b111_1111;
 
     always@* begin
         next_state = cur_state;
@@ -129,8 +130,6 @@ module receive_all(
             stored_move_dir_next = cur_data;
         end
     end
-
-    ila_1 ila_inst(clk, done, Ack, cur_data, ready, Request, interboard_data, cur_state, interboard_rst);
 
 
 endmodule

@@ -1,6 +1,7 @@
 module send_all(
     input wire clk,
     input wire rst,
+    input wire interboard_rst,
     input wire Ack,
     input wire ctrl_en,                 // one-pulse signal from GameControl indicating there is data to send
     input wire [3:0] ctrl_msg_type,
@@ -26,7 +27,7 @@ module send_all(
 
     reg [2:0] cur_state, next_state;
     reg en_send, en_send_next;                  // indicate whether to send data to other board, one-pulse
-    reg interboard_rst, interboard_rst_next;    // used to indicate single_send should send interboard_rst to other board, 
+    // reg interboard_rst, interboard_rst_next;    // used to indicate single_send should send interboard_rst to other board, 
                                                 // always true after rst is asserted
     wire ready;                                 // from single_send, indicate whether the transmission is done and ready for next round
     reg [5:0] cur_data, next_data;              // data to send to other board corresponding to each state
@@ -66,7 +67,7 @@ module send_all(
         if(delayed_rst) begin
             cur_state <= INIT;
             cur_data <= 0;
-            interboard_rst <= 0;
+            // interboard_rst <= 0;
             en_send <= 0;
             
             stored_msg_type <= 0;
@@ -79,7 +80,7 @@ module send_all(
         else begin
             cur_state <= next_state;
             cur_data <= next_data;
-            interboard_rst <= interboard_rst_next;
+            // interboard_rst <= interboard_rst_next;
             en_send <= en_send_next;
 
             stored_msg_type <= stored_msg_type_next;
@@ -174,12 +175,12 @@ module send_all(
         end
     end
 
-    always @(*) begin
-        interboard_rst_next = interboard_rst;
-        if(rst) begin
-            interboard_rst_next = 1;
-        end
-    end
+    // always @(*) begin
+    //     interboard_rst_next = interboard_rst;
+    //     if(rst) begin
+    //         interboard_rst_next = 1;
+    //     end
+    // end
 
     always@* begin
         stored_msg_type_next = stored_msg_type;
