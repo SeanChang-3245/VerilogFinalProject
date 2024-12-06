@@ -20,6 +20,7 @@ module GameControl_top #(
     input wire [4:0] mouse_block_x,      // mouse information
     input wire [2:0] mouse_block_y,      // mouse information
 
+    output wire transmit,                 // to InterboardCommunication, indicate it's this player's turn to transmit data (move)
     output wire ctrl_en,
     output wire ctrl_move_dir,
     output wire [4:0] ctrl_block_x,      // protocol information 
@@ -39,8 +40,9 @@ module GameControl_top #(
 
     localparam HAND_TAKE = 3;
     localparam HAND_DRAW = 4;
+    localparam HAND_DOWN = 5;
 
-    localparam DECK_DRAW = 5;
+    localparam DECK_DRAW = 6;
 
     localparam STATE_TURN = 6;
     localparam STATE_RST_TABLE = 7;
