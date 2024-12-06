@@ -2,118 +2,73 @@ module MouseInterface_top (
     input wire clk,
     input wire rst,
     input wire interboard_rst,
+	input wire [9:0] h_cnt,
+	input wire [9:0] v_cnt,
     inout wire PS2_CLK,          // PS2 Mouse
     inout wire PS2_DATA,         // PS2 Mouse
     
     output wire mouse_inblock,     // 處理滑鼠不在任何一個區塊的情況
+	output wire en_mouse_display,
+	output wire [11:0] mouse_pixel,
     output wire l_click,
     output wire cheat_activate,
-    output reg [9:0] mouse_x,		// position on screen
-    output reg [8:0] mouse_y,
+    output wire [9:0] mouse_x,		// position on screen
+    output wire [8:0] mouse_y,
     output wire [4:0] mouse_block_x,	// mouse in which block
     output wire [2:0] mouse_block_y
 );
 
-	wire [7:0] x;
-	wire [7:0] y;
+	wire left_click, right_click;
+	wire all_rst;
+	assign all_rst = rst | interboard_rst;
 
-	wire x_ov, x_sign, y_ov, y_sign;
-	wire o_r_click, o_l_click, valid;
+	wire left_pulse, right_pulse;
+	one_pulse op_left_inst( .clk(clk), .pb_db(left_click), .pb_op(left_pulse) );
+	one_pulse op_right_inst( .clk(clk), .pb_db(right_click), .pb_op(right_pulse) );
 
-	ps2_mouse mouse_inst_0(
-		.i_clk(clk), 
-		.i_reset(rst), 
-		.i_PS2Clk(PS2_CLK), 
-		.i_PS2Data(PS2_DATA),
-		.o_x(x), 
-		.o_x_ov(x_ov), 
-		.o_x_sign(x_sign), 
-		.o_y(y), 
-		.o_y_ov(y_ov), 
-		.o_y_sign(y_sign),
-		.o_r_click(o_r_click), 
-		.o_l_click(o_l_click), 
-		.o_valid(valid)
+	mouse mouse_inst0(
+		.clk(clk), 
+		.rst(all_rst),
+		.h_cntr_reg(h_cnt), 
+		.v_cntr_reg(v_cnt), 
+		.PS2_CLK(PS2_CLK), 
+		.PS2_DATA(PS2_DATA),
+		.enable_mouse_display(en_mouse_display), 
+		.MOUSE_X_POS(mouse_x), 
+		.MOUSE_Y_POS(mouse_y), 
+		.MOUSE_LEFT(left_click), 
+		.MOUSE_RIGHT(right_click), 
+		.mouse_pixel(mouse_pixel)
 	);
 
-	parameter NONE = 0;
-	parameter RIGHT = 1;
-	parameter LEFT = 2;
-
-	parameter SPEED = 1;
-
-	reg [1:0] cur_click;
 	reg [2:0] countR, countR_next;
 	reg [2:0] countL, countL_next;
-	wire [7:0] x_move;
-	wire [7:0] y_move;
-	reg [9:0] mouse_x_next;
-	reg [8:0] mouse_y_next;
 
-	assign cheat_activate = ((cur_click == RIGHT) && (countR == 4)) ? 1 : 0;
-	assign l_click = cur_click == LEFT ? 1 : 0;
-
-	// HANDLE CURRENT CLICK	=========================================================================
-	always @(*) begin
-		cur_click = NONE;
-		if(valid) begin
-			if(o_r_click) cur_click = RIGHT;
-			else if(o_l_click) cur_click = LEFT;
-		end
-	end
-
-	// CONTINUOUS CLICK COUNTER ======================================================================
+	assign l_click = left_pulse;
+	assign cheat_activate = (countR == 5);
+	
 	always @(*) begin
 		countR_next = countR;
 		countL_next = countL;
-		if(cur_click == LEFT) begin
-			countL_next = countL + 1;
-			countR_next = 0;
-		end
-		else if(cur_click == RIGHT) begin
+		if(right_pulse) begin
 			countR_next = countR + 1;
 			countL_next = 0;
 		end
-	end
-	// MOUSE MOVEMENT CONTROL ======================================================================
-	assign x_move = x_sign ? - (SPEED * x) : SPEED * x;
-	assign y_move = y_sign ? SPEED * y : - (SPEED * y);
-	always @(*) begin
-		mouse_x_next = mouse_x;
-		if(valid) begin
-			if(!x_ov && (mouse_x + x_move) >= 0 && (mouse_x + x_move) < 640) begin
-				mouse_x_next = mouse_x + x_move;
-			end else if(x_ov && (mouse_x - x_move) >= 0 && (mouse_x - x_move) < 640) begin
-				mouse_x_next = mouse_x - x_move;
-			end
+		else if(left_pulse) begin
+			countR_next = 0;
+			countL_next = countL + 1;
+		end else if(countR == 5) begin
+			countR_next = 0;
 		end
 	end
-	always @(*) begin
-		mouse_y_next = mouse_y;
-		if(valid) begin
-			if(!y_ov && (mouse_y + y_move) >= 0 && (mouse_y + y_move) < 480) begin
-				mouse_y_next = mouse_y + y_move;
-			end else if(y_ov && (mouse_y - y_move) >= 0 && (mouse_y - y_move) < 480) begin
-				mouse_y_next = mouse_y - y_move;
-			end
-		end
-	end
-	// STATE REGISTER ===============================================================================
-	always @(posedge clk, posedge rst) begin
-		if(rst) begin
-			countL <= 0;
+	always @(posedge clk) begin
+		if(all_rst) begin
 			countR <= 0;
-			mouse_x <= 320;
-			mouse_y <= 240;
-		end else begin
-			countL <= countL_next;
+			countL <= 0;
+		end
+		else begin
 			countR <= countR_next;
-			mouse_x <= mouse_x_next;
-			mouse_y <= mouse_y_next;
+			countL <= countL_next;
 		end
 	end
-
-	// ILA debug
-	ila_0 ila_0_inst(clk, x, PS2_DATA, x_ov, x_sign, valid);
-
 endmodule
