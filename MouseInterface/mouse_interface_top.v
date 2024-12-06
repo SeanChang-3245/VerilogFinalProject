@@ -4,6 +4,7 @@ module MouseInterface_top (
     input wire interboard_rst,
 	input wire [9:0] h_cnt,
 	input wire [9:0] v_cnt,
+	
     inout wire PS2_CLK,          // PS2 Mouse
     inout wire PS2_DATA,         // PS2 Mouse
     
