@@ -40,8 +40,9 @@ module GameControl_top #(
 
     localparam HAND_TAKE = 3;
     localparam HAND_DRAW = 4;
+    localparam HAND_DOWN = 5;
 
-    localparam DECK_DRAW = 5;
+    localparam DECK_DRAW = 6;
 
     localparam STATE_TURN = 6;
     localparam STATE_RST_TABLE = 7;
