@@ -28,14 +28,14 @@ module Draw_card(
 	integer i;
 	always @(*) begin
 		for(i = 0; i < 144; i = i + 1) begin
-			card_table[i] = map[i*6 -: 6];
+			card_table[i] = map[i*6+5 -: 6];
 		end
 	end
 
 	// CARD XY GEN
 	assign position = (x*18 + y);
 	always @(*) begin
-		x = h_cnt/32;
+		x = 0;
 		if(h_cnt >= 32 && h_cnt < 607) begin
 			x = (h_cnt-32)/32;
 		end
