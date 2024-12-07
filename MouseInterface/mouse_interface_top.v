@@ -72,4 +72,26 @@ module MouseInterface_top (
 			countL <= countL_next;
 		end
 	end
+	// mouse in which block
+	reg [4:0] x_block;
+	reg [2:0] y_block;
+	assign	mouse_block_x = x_block;
+	assign	mouse_block_y = y_block;
+	always @(*) begin
+		x_block = 0;
+		if(mouse_x >= 32 && mouse_x < 607) begin
+			x_block = (mouse_x-32)/32;
+		end
+	end
+	always @(*) begin
+		if(mouse_y >= 19 && mouse_y < 349) begin
+			y_block = (mouse_y-19)/55;
+		end
+		else if(mouse_y >= 360 && mouse_y < 461) begin
+			y_block = 6 + (mouse_y-360)/55;
+		end 
+		else begin
+			y_block = 0;
+		end
+	end
 endmodule
