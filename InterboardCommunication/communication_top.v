@@ -35,6 +35,12 @@ module InterboardCommunication_top(
     //      2.1 immediately reset all the modules, including communication_top, sending and receiving
 
     // Handle sending reset to other board
+
+    // raw data that need to send, haven't consider rst_other
+    wire ack_out_raw, request_out_raw;
+    wire [5:0] inter_data_out_raw;
+    wire interboard_en_raw;
+
     wire delayed_rst;
     delay_n_cycle #(.n(10)) delay_rst(
         .clk(clk),
@@ -61,7 +67,10 @@ module InterboardCommunication_top(
 
     // Handle reset called by other board
     assign interboard_rst = ({Ack_in, Request_in, inter_data_in} == 8'hff);
-
+    assign inter_data_out = rst_other ? 6'b11_1111 : (transmit ? inter_data_out_raw : 6'b0);
+    assign Ack_out = rst_other ? 1'b1 : (transmit ? ack_out_raw : 1'b0);
+    assign Request_out = rst_other ?  1'b1 : (transmit ? request_out_raw : 1'b0);
+    assign interboard_en = transmit ? 1'b0 : interboard_en_raw;
 
     send_all sa (
         .clk(clk),
@@ -76,8 +85,8 @@ module InterboardCommunication_top(
         .ctrl_card(ctrl_card),
         .ctrl_sel_len(ctrl_sel_len),
 
-        .Request_out(Request_out),
-        .inter_data_out(inter_data_out)
+        .Request_out(request_out_raw),
+        .inter_data_out(inter_data_out_raw)
     );
 
     receive_all ra (
@@ -87,8 +96,8 @@ module InterboardCommunication_top(
         .Request_in(Request_in),
         .inter_data_in(inter_data_in),
         
-        .Ack_out(Ack_out),
-        .interboard_en(interboard_en),
+        .Ack_out(ack_out_raw),
+        .interboard_en(interboard_en_raw),
         .interboard_move_dir(interboard_move_dir),
         .interboard_block_x(interboard_block_x),
         .interboard_block_y(interboard_block_y),
