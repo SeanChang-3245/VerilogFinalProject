@@ -6,7 +6,7 @@ module GameControl_top #(
     input wire interboard_rst,
     input wire start_game,
     input wire rule_valid,
-    input wire mouse_valid,
+    input wire mouse_inblock,
     input wire cheat_activate,
     input wire move_left,
     input wire move_right,
@@ -20,6 +20,9 @@ module GameControl_top #(
     input wire [4:0] mouse_block_x,      // mouse information
     input wire [2:0] mouse_block_y,      // mouse information
 
+    output wire can_done,
+    output wire can_draw,
+    output wire transmit,                 // to InterboardCommunication and Memory, indicate it's this player's turn to transmit data (move)
     output wire ctrl_en,
     output wire ctrl_move_dir,
     output wire [4:0] ctrl_block_x,      // protocol information 
@@ -39,6 +42,8 @@ module GameControl_top #(
 
     localparam HAND_TAKE = 3;
     localparam HAND_DRAW = 4;
+    localparam HAND_DOWN = 5;
+
 
     localparam DECK_DRAW = 5;
     localparam DECK_DOWN = 6;
@@ -48,6 +53,11 @@ module GameControl_top #(
     localparam STATE_RST_GAME = 9;
     localparam STATE_CHEAT = 10;
 
+
+
+    wire my_turn;
+
+    // init draw can use a counter that count to 28, when mod 2 == PLAYER, it's my turn
 
 
 endmodule

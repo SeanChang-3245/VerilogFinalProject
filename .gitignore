@@ -6,3 +6,12 @@
 **/*.sim/
 **/*.srcs/
 **/*.xpr
+
+**/*.jpg
+**/*.coe
+!black_output.coe
+!red_output.coe
+!blue_output.coe
+!orange_output.coe
+!black_rummi.coe
+!red_rummi.coe
