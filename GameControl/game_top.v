@@ -44,20 +44,20 @@ module GameControl_top #(
     localparam HAND_DRAW = 4;
     localparam HAND_DOWN = 5;
 
-
     localparam DECK_DRAW = 5;
-    localparam DECK_DOWN = 6;
+    // localparam DECK_DOWN = 6;
 
     localparam STATE_TURN = 7;
     localparam STATE_RST_TABLE = 8;
-    localparam STATE_RST_GAME = 9;
     localparam STATE_CHEAT = 10;
+    // localparam STATE_RST_GAME = 9;
 
 
 
     wire my_turn;
 
-    // init draw can use a counter that count to 28, when mod 2 == PLAYER, it's my turn
+    // init draw use two states, player one draw 14 cards first, then pass a signal 
+    // to player two to notify it is his turn to draw
 
 
 endmodule
