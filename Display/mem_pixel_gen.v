@@ -21,7 +21,7 @@ module Mem_pixel(
 	always @(*) begin
 		pixel_addr = 0;
 		if(card_type < 13) begin
-			pixel_addr = 1*32*46 + pixel_y*32 + pixel_x;
+			pixel_addr = card_type*32*46 + pixel_y*32 + pixel_x;
 		end else if(card_type < 26) begin
 			pixel_addr = (card_type-13)*32*46 + pixel_y*32 + pixel_x;
 		end else if(card_type < 39) begin

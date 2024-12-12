@@ -5,7 +5,7 @@ module Draw_card(
 	input [8*18*6-1:0] map,
 	input wire [9:0] h_cnt,
 	input wire [9:0] v_cnt,
-	output reg [11:0] card_pixel
+	output wire [11:0] card_pixel
 );
 
 	reg [5:0] card_type;
