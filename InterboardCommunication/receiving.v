@@ -1,11 +1,12 @@
 module receive_all(
     input wire clk,
-    input wire rst,
-    input wire Request,
-    input wire [5:0] interboard_data,
+    input wire rst,                             // reset called by this board
+    input wire interboard_rst,                  // reset called by other board
+    input wire Request_in,
+    input wire [5:0] inter_data_in,
 
-    output wire Ack,
-    output wire interboard_rst,
+    output wire Ack_out,
+    // output wire interboard_rst,
     output wire interboard_en,                  // to upper layer, one-pulse
     output wire [3:0] interboard_msg_type,
     output wire [4:0] interboard_block_x,
@@ -39,16 +40,17 @@ module receive_all(
     single_receive sr(
         .clk(clk),
         .rst(rst),
-        .Request(Request),
-        .interboard_data(interboard_data),
+        .interboard_rst(interboard_rst),
+        .Request_in(Request_in),
+        .inter_data_in(inter_data_in),
 
         .done(done),
-        .Ack(Ack),
+        .Ack_out(Ack_out),
         .data_out(cur_data)
     );
 
     always@(posedge clk) begin
-        if(rst) begin
+        if(rst || interboard_rst) begin
             cur_state <= WAIT_1;
             stored_msg_type <= 0;
             stored_block_x <= 0;
@@ -75,7 +77,7 @@ module receive_all(
     assign interboard_card = stored_card;
     assign interboard_sel_len = stored_sel_len;
     assign interboard_move_dir = stored_move_dir;
-    assign interboard_rst = {Request, interboard_data} == 7'b111_1111;
+    // assign interboard_rst = {Request, interboard_data} == 7'b111_1111;
 
     always@* begin
         next_state = cur_state;
@@ -128,6 +130,8 @@ module receive_all(
             stored_move_dir_next = cur_data;
         end
     end
+
+
 endmodule
 
 
@@ -135,14 +139,15 @@ endmodule
 module single_receive(
     input wire clk,
     input wire rst, 
-    input wire Request,
-    input wire [5:0] interboard_data,   // from other board
+    input wire interboard_rst,
+    input wire Request_in,
+    input wire [5:0] inter_data_in,   // from other board
   
     output wire done,                   // to upper layer, indicate one round is end, the data should be retrieved, one-pulse
-    output wire Ack,
+    output wire Ack_out,
     output wire [5:0] data_out          // to upper layer
 );
-    localparam ACK_TIME = 10;
+    localparam ACK_LENGTH = 10;
   
     localparam WAIT_REQ = 0;
     localparam ACK_STATE = 1;
@@ -150,10 +155,10 @@ module single_receive(
     reg cur_state, next_state;
     reg [9:0] counter, counter_next;
 
-    assign done = (cur_state == ACK_STATE && counter == ACK_STATE);
+    assign done = (cur_state == ACK_STATE && counter == ACK_LENGTH); // one-pulse
 
     always@(posedge clk) begin
-        if(rst) begin
+        if(rst || interboard_rst) begin
             cur_state <= WAIT_REQ;
             counter <= 0;
         end 
@@ -165,16 +170,16 @@ module single_receive(
 
     always@* begin
         next_state = cur_state;
-        if(cur_state == WAIT_REQ && Request) begin
+        if(cur_state == WAIT_REQ && Request_in) begin
             next_state = ACK_STATE;
         end
-        else if(cur_state == ACK_STATE && counter == ACK_TIME) begin
+        else if(cur_state == ACK_STATE && counter == ACK_LENGTH) begin
             next_state = WAIT_REQ;
         end
     end
 
-    assign Ack = (cur_state == ACK_STATE);
-    assign data_out = interboard_data;
+    assign Ack_out = (cur_state == ACK_STATE);
+    assign data_out = inter_data_in;
 
     always@(*) begin
         counter_next = counter;

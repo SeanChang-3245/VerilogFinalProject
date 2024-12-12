@@ -3,11 +3,13 @@ module InterboardCommunication_TB(
     input wire rst,
     input wire ctrl_en,
     input wire [15:0] SW,
+    input wire Request_in,
+    input wire Ack_in,
+    input wire [5:0] inter_data_in,
 
-    inout Request,
-    inout Ack,
-    inout [5:0] interboard_data,
-
+    output wire Request_out,
+    output wire Ack_out,
+    output wire [5:0] inter_data_out,
     output reg [15:0] LED
 );
 
@@ -39,11 +41,14 @@ module InterboardCommunication_TB(
         .ctrl_msg_type(SW[6:3]),
         .ctrl_card(0),
         .ctrl_sel_len(SW[2:0]),
+        .Request_in(Request_in),
+        .Ack_in(Ack_in),
+        .inter_data_in(inter_data_in),
 
-        .Request(Request),
-        .Ack(Ack),
-        .interboard_data(interboard_data),
 
+        .Request_out(Request_out),
+        .Ack_out(Ack_out),
+        .inter_data_out(inter_data_out),
         .interboard_rst(interboard_rst),
         .interboard_en(interboard_en),
         .interboard_move_dir(interboard_move_dir),
