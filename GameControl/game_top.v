@@ -44,12 +44,15 @@ module GameControl_top #(
     localparam HAND_DRAW = 4;
     localparam HAND_DOWN = 5;
 
-    localparam DECK_DRAW = 6;
 
-    localparam STATE_TURN = 6;
-    localparam STATE_RST_TABLE = 7;
-    // localparam STATE_RST_GAME = 8;
-    localparam STATE_CHEAT = 8;
+    localparam DECK_DRAW = 5;
+    localparam DECK_DOWN = 6;
+
+    localparam STATE_TURN = 7;
+    localparam STATE_RST_TABLE = 8;
+    localparam STATE_RST_GAME = 9;
+    localparam STATE_CHEAT = 10;
+
 
 
     wire my_turn;
