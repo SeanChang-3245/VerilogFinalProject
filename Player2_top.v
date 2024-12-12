@@ -3,14 +3,17 @@ module P1_top (
     input wire rst,
     input wire btnL,
     input wire btnR,
+    input wire Request_in,
+    input wire Ack_in,
+    input wire [5:0] inter_data_in,
     input wire [15:0] SW,
     
-    inout Request,
-    inout Ack,
-    inout [5:0] interboard_data,
     inout wire PS2_CLK,          // PS2 Mouse
     inout wire PS2_DATA,         // PS2 Mouse
 
+    output wire Request_out,
+    output wire Ack_out,
+    output wire [5:0] inter_data_out,
     output wire can_done,        // LED[1]
     output wire can_draw,        // LED[2]
     output wire [3:0] DIGIT,     // 7-segment display
@@ -22,7 +25,7 @@ module P1_top (
     output wire vsync            // VGA
 );
     // Game Control 要把這個用 parameter 傳進去 
-    localparam PLAYER = 1; // Use JB
+    localparam PLAYER = 1; 
 
     // Preprocess button and switch
     wire reset_table;
@@ -121,6 +124,8 @@ module P1_top (
         .reset_table(reset_table),
         .done_and_next(done_and_next),
         .draw_and_next(draw_and_next),
+        .interboard_en(interboard_en),
+        .interboard_msg_type(interboard_msg_type),
         .available_card(available_card),
         .picked_card(picked_card),
         .mouse_x(mouse_x),
@@ -168,18 +173,20 @@ module P1_top (
         .clk(clk),
         .rst(rst), 
         .transmit(transmit),
+        .Request_in(Request_in),
+        .Ack_in(Ack_in),
+        .inter_data_in(inter_data_in),
         .ctrl_en(ctrl_en),
         .ctrl_move_dir(ctrl_move_dir),
         .ctrl_block_x(ctrl_block_x),
         .ctrl_block_y(ctrl_block_y),
         .ctrl_msg_type(ctrl_msg_type),
         .ctrl_card(ctrl_card),
-        .ctrl_sel_len(ctrl_sel_len),
-        
-        .Request(Request),
-        .Ack(Ack),
-        .interboard_data(interboard_data),
+        .ctrl_sel_len(ctrl_sel_len),        
 
+        .Request_out(Request_out),
+        .Ack_out(Ack_out),
+        .inter_data_out(inter_data_out),
         .interboard_rst(interboard_rst),
         .interboard_en(interboard_en),
         .interboard_move_dir(interboard_move_dir),
