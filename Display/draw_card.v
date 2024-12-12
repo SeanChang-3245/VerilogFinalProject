@@ -11,8 +11,8 @@ module Draw_card(
 	reg [5:0] card_type;
 	reg [5:0] pixel_x;
 	reg [5:0] pixel_y;
-	mem_pixel_gen mem_pixel_gen_inst(
-		.clk(clk_25MHz),
+	Mem_pixel mem_pixel_inst(
+		.clk_25MHz(clk_25MHz),
 		.pixel_x(pixel_x),
 		.pixel_y(pixel_y),
 		.card_type(card_type),
@@ -33,7 +33,7 @@ module Draw_card(
 	end
 
 	// CARD XY GEN
-	assign position = (x*18 + y);
+	assign position = (x + y*18);
 	always @(*) begin
 		x = 0;
 		if(h_cnt >= 32 && h_cnt < 607) begin
