@@ -1,11 +1,11 @@
 module receive_all(
     input wire clk,
-    input wire rst,
-    input wire interboard_rst,
-    input wire Request,
-    input wire [5:0] interboard_data,
+    input wire rst,                             // reset called by this board
+    input wire interboard_rst,                  // reset called by other board
+    input wire Request_in,
+    input wire [5:0] inter_data_in,
 
-    output wire Ack,
+    output wire Ack_out,
     // output wire interboard_rst,
     output wire interboard_en,                  // to upper layer, one-pulse
     output wire [3:0] interboard_msg_type,
@@ -41,11 +41,11 @@ module receive_all(
         .clk(clk),
         .rst(rst),
         .interboard_rst(interboard_rst),
-        .Request(Request),
-        .interboard_data(interboard_data),
+        .Request_in(Request_in),
+        .inter_data_in(inter_data_in),
 
         .done(done),
-        .Ack(Ack),
+        .Ack_out(Ack_out),
         .data_out(cur_data)
     );
 
@@ -140,11 +140,11 @@ module single_receive(
     input wire clk,
     input wire rst, 
     input wire interboard_rst,
-    input wire Request,
-    input wire [5:0] interboard_data,   // from other board
+    input wire Request_in,
+    input wire [5:0] inter_data_in,   // from other board
   
     output wire done,                   // to upper layer, indicate one round is end, the data should be retrieved, one-pulse
-    output wire Ack,
+    output wire Ack_out,
     output wire [5:0] data_out          // to upper layer
 );
     localparam ACK_LENGTH = 10;
@@ -170,7 +170,7 @@ module single_receive(
 
     always@* begin
         next_state = cur_state;
-        if(cur_state == WAIT_REQ && Request) begin
+        if(cur_state == WAIT_REQ && Request_in) begin
             next_state = ACK_STATE;
         end
         else if(cur_state == ACK_STATE && counter == ACK_LENGTH) begin
@@ -178,8 +178,8 @@ module single_receive(
         end
     end
 
-    assign Ack = (cur_state == ACK_STATE);
-    assign data_out = interboard_data;
+    assign Ack_out = (cur_state == ACK_STATE);
+    assign data_out = inter_data_in;
 
     always@(*) begin
         counter_next = counter;
