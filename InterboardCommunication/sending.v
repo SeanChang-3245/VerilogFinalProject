@@ -36,12 +36,12 @@ module send_all(
                                                 // the interboard_rst is transmitted to other board
     
     // Used to store data to be sent, passed from GameControl
-    reg [3:0] stored_msg_type, stored_msg_type_next;
-    reg [4:0] stored_block_x, stored_block_x_next;
-    reg [2:0] stored_block_y, stored_block_y_next;
-    reg [5:0] stored_card, stored_card_next;
-    reg [2:0] stored_sel_len, stored_sel_len_next;
-    reg stored_move_dir, stored_move_dir_next;
+    // reg [3:0] stored_msg_type, stored_msg_type_next;
+    // reg [4:0] stored_block_x, stored_block_x_next;
+    // reg [2:0] stored_block_y, stored_block_y_next;
+    // reg [5:0] stored_card, stored_card_next;
+    // reg [2:0] stored_sel_len, stored_sel_len_next;
+    // reg stored_move_dir, stored_move_dir_next;
 
 
     // delay_n_cycle #(.n(10)) delay_rst(
@@ -70,12 +70,12 @@ module send_all(
             // interboard_rst <= 0;
             en_send <= 0;
             
-            stored_msg_type <= 0;
-            stored_block_x <= 0;
-            stored_block_y <= 0;
-            stored_card <= 0;
-            stored_sel_len <= 0;
-            stored_move_dir <= 0;
+            // stored_msg_type <= 0;
+            // stored_block_x <= 0;
+            // stored_block_y <= 0;
+            // stored_card <= 0;
+            // stored_sel_len <= 0;
+            // stored_move_dir <= 0;
         end
         else begin
             cur_state <= next_state;
@@ -83,12 +83,12 @@ module send_all(
             // interboard_rst <= interboard_rst_next;
             en_send <= en_send_next;
 
-            stored_msg_type <= stored_msg_type_next;
-            stored_block_x <= stored_block_x_next;
-            stored_block_y <= stored_block_y_next;
-            stored_card <= stored_card_next;
-            stored_sel_len <= stored_sel_len_next;
-            stored_move_dir <= stored_move_dir_next;
+            // stored_msg_type <= stored_msg_type_next;
+            // stored_block_x <= stored_block_x_next;
+            // stored_block_y <= stored_block_y_next;
+            // stored_card <= stored_card_next;
+            // stored_sel_len <= stored_sel_len_next;
+            // stored_move_dir <= stored_move_dir_next;
         end
     end
 
@@ -182,22 +182,22 @@ module send_all(
     //     end
     // end
 
-    always@* begin
-        stored_msg_type_next = stored_msg_type;
-        stored_block_x_next = stored_block_x;
-        stored_block_y_next = stored_block_y;
-        stored_card_next = stored_card;
-        stored_sel_len_next = stored_sel_len;
-        stored_move_dir_next = stored_move_dir;
-        if(cur_state == INIT && ctrl_en) begin
-            stored_msg_type_next = ctrl_msg_type;
-            stored_block_x_next = ctrl_block_x;
-            stored_block_y_next = ctrl_block_y;
-            stored_card_next = ctrl_card;
-            stored_sel_len_next = ctrl_sel_len;
-            stored_move_dir_next = ctrl_move_dir;
-        end
-    end
+    // always@* begin
+    //     stored_msg_type_next = stored_msg_type;
+    //     stored_block_x_next = stored_block_x;
+    //     stored_block_y_next = stored_block_y;
+    //     stored_card_next = stored_card;
+    //     stored_sel_len_next = stored_sel_len;
+    //     stored_move_dir_next = stored_move_dir;
+    //     if(cur_state == INIT && ctrl_en) begin
+    //         stored_msg_type_next = ctrl_msg_type;
+    //         stored_block_x_next = ctrl_block_x;
+    //         stored_block_y_next = ctrl_block_y;
+    //         stored_card_next = ctrl_card;
+    //         stored_sel_len_next = ctrl_sel_len;
+    //         stored_move_dir_next = ctrl_move_dir;
+    //     end
+    // end
 
     // ila_1 ila_inst(clk, en_send, Ack, cur_data, ready, Request, interboard_data, cur_state, ctrl_en);
 
