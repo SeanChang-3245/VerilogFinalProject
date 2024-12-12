@@ -82,11 +82,15 @@ module Draw_card(
 	end
 	// decide card frame
 	always @(*) begin
-		if(pixel_y < 2 && pixel_y >= 44 && pixel_y < 46) begin
-			card_pixel = 12'hFD3;
-		end
-		else if(pixel_x < 2 && pixel_x >= 30 && pixel_x < 32)begin
-			card_pixel = 12'hFD3;
+		if(selected_card[position]) begin
+			if(pixel_y < 2 && pixel_y >= 44 && pixel_y < 46) begin
+				card_pixel = 12'hFD3;
+			end
+			else if(pixel_x < 2 && pixel_x >= 30 && pixel_x < 32)begin
+				card_pixel = 12'hFD3;
+			end else begin
+				card_pixel = mem_card_pixel;
+			end
 		end else begin
 			card_pixel = mem_card_pixel;
 		end
