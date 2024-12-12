@@ -25,10 +25,14 @@ module Display_top(
 
 	wire all_rst;
 	assign all_rst = rst | interboard_rst;
+
+	reg [11:0] pixel;
 	wire [11:0] card_pixel;
+
+	assign {vgaRed, vgaGreen, vgaBlue} = (valid) ? pixel : 12'h0;
     vga_controller vga_inst(
         .pclk(clk_25MHz),
-        .reset(rst),
+        .reset(all_rst),
         .hsync(hsync),
         .vsync(vsync),
         .valid(valid),
@@ -45,10 +49,8 @@ module Display_top(
 		.v_cnt(v_cnt),
 		.card_pixel(card_pixel)
 	);
-
-
 	
-
+	
     // use if-else to determine which object should be drawn on the top
     // each object should output a signal to indicate whether is should be drawn at this pixel
     // priority: mouse > card = button > background
@@ -59,14 +61,23 @@ module Display_top(
     // else if(card_valid) begin
     //     pixel = card_pixel
     // end
-    // else if(button_valid) begin
-    //     pixel = button_pixel
-    // end
     // else begin
     //     pixel = bg_pixel
     // end
 
-
+	always @(*) begin
+		if(en_mouse_display) begin
+			pixel = mouse_pixel;
+		end
+		else if(card_valid) begin
+			pixel = card_pixel;
+		end
+		else begin
+			pixel = 12'h68A;
+		end
+	end
+	// card_valid control
+	assign card_valid = (h_cnt >= 32 && h_cnt < 607) && (v_cnt >= 19 && v_cnt < 349) && (v_cnt >= 360 && v_cnt < 461);
 
 
 endmodule

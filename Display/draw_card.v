@@ -2,13 +2,15 @@ module Draw_card(
 	input wire clk,
 	input wire clk_25MHz,
 	input wire rst,
-	input [8*18*6-1:0] map,
+	input wire [8*18*6-1:0] map,
+	input wire [8*18-1:0] sel_card,
 	input wire [9:0] h_cnt,
 	input wire [9:0] v_cnt,
 	output reg [11:0] card_pixel
 );
 
 	reg [5:0] card_type;
+	wire [11:0] mem_card_pixel;
 	reg [5:0] pixel_x;
 	reg [5:0] pixel_y;
 	mem_pixel_gen mem_pixel_gen_inst(
@@ -16,19 +18,25 @@ module Draw_card(
 		.pixel_x(pixel_x),
 		.pixel_y(pixel_y),
 		.card_type(card_type),
-		.card_pixel(card_pixel)
+		.card_pixel(mem_card_pixel)
 	);
 
 	reg [5:0] card_table [0:8*18-1];
+	reg selected_card [0:8*18-1];
 	reg [4:0] x;
 	reg [2:0] y;
 	wire [7:0] position;
 
 
-	integer i;
+	integer i, j;
 	always @(*) begin
 		for(i = 0; i < 144; i = i + 1) begin
 			card_table[i] = map[i*6+5 -: 6];
+		end
+	end
+	always @(*) begin
+		for(j = 0; j < 144; j = j + 1) begin
+			selected_card[j] = map[j];
 		end
 	end
 
@@ -70,6 +78,17 @@ module Draw_card(
 		end
 		else if(v_cnt >= 360 && v_cnt < 461) begin
 			pixel_y = v_cnt - 360 - (y-6)*55;
+		end
+	end
+	// decide card frame
+	always @(*) begin
+		if(pixel_y < 2 && pixel_y >= 44 && pixel_y < 46) begin
+			card_pixel = 12'hFD3;
+		end
+		else if(pixel_x < 2 && pixel_x >= 30 && pixel_x < 32)begin
+			card_pixel = 12'hFD3;
+		end else begin
+			card_pixel = mem_card_pixel;
 		end
 	end
 endmodule
