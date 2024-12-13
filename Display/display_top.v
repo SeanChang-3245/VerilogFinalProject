@@ -77,7 +77,10 @@ module Display_top(
 		end
 	end
 	// card_valid control
-	assign card_valid = (h_cnt >= 32 && h_cnt < 607) && (v_cnt >= 19 && v_cnt < 349) && (v_cnt >= 360 && v_cnt < 461);
-
+	assign card_valid = (h_cnt >= 32 && h_cnt < 607) && 
+						((v_cnt >= 19 && v_cnt < 65) || (v_cnt >= 74 && v_cnt < 120) ||
+						 (v_cnt >= 129 && v_cnt < 175) || (v_cnt >= 184 && v_cnt < 230)||
+						 (v_cnt >= 239 && v_cnt < 285) || (v_cnt >= 294 && v_cnt < 340)||
+						 (v_cnt >= 360 && v_cnt < 406) || (v_cnt >= 415 && v_cnt < 461));
 
 endmodule
