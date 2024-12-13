@@ -10,6 +10,7 @@
 
 ## Validated
 * InterboardCommunication
+* Draw_once of Game Control 
 
 ## In Progress
 * GameControl
@@ -34,6 +35,11 @@
         1. Immediately reset all the modules upon all input turning to 1 (`Ack_out`, `Request_out`, `inter_data_in`), including communication_top, sending and receiving, and send `interboard_rst` to all the modules
 * Sending
 * Receiving
+
+## Game Control
+
+### draw_once
+* Since the operator `%` is too slow and will cause timing error, I have the write my own modulo function that rely operator on multiple clock cycle
 
 ---
 
