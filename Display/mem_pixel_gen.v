@@ -48,6 +48,8 @@ module Mem_pixel(
 			card_pixel = face_pixel[0];
 		end else if(card_type == 53) begin
 			card_pixel = face_pixel[1];
+		end else begin
+			card_pixel = 12'h68A;
 		end
 	end
 endmodule

@@ -33,7 +33,7 @@ module Display_top(
 	assign {vgaRed, vgaGreen, vgaBlue} = (valid) ? pixel : 12'h0;
     vga_controller vga_inst(
         .pclk(clk_25MHz),
-        .reset(rst),
+        .reset(all_rst),
         .hsync(hsync),
         .vsync(vsync),
         .valid(valid),
@@ -50,8 +50,6 @@ module Display_top(
 		.v_cnt(vga_v_cnt),
 		.card_pixel(card_pixel)
 	);
-
-
 	
 	SevenSegment Sevenseg_inst0(
 		.clk(clk), 
@@ -72,9 +70,6 @@ module Display_top(
     // else if(card_valid) begin
     //     pixel = card_pixel
     // end
-    // else if(button_valid) begin
-    //     pixel = button_pixel
-    // end
     // else begin
     //     pixel = bg_pixel
     // end
@@ -92,7 +87,10 @@ module Display_top(
 	end
 	// card_valid control
 	assign card_valid = (h_cnt >= 32 && h_cnt < 607) && 
-						((v_cnt >= 19 && v_cnt < 349) || (v_cnt >= 360 && v_cnt < 461));
+						((v_cnt >= 19 && v_cnt < 65) || (v_cnt >= 74 && v_cnt < 120) ||
+						 (v_cnt >= 129 && v_cnt < 175) || (v_cnt >= 184 && v_cnt < 230)||
+						 (v_cnt >= 239 && v_cnt < 285) || (v_cnt >= 294 && v_cnt < 340)||
+						 (v_cnt >= 360 && v_cnt < 406) || (v_cnt >= 415 && v_cnt < 461));
 
 	wire [3:0] deck_ten = deck_card_cnt/10;
 	wire [3:0] deck_one = deck_card_cnt%10;
@@ -100,4 +98,6 @@ module Display_top(
 	wire [3:0] oppo_one = oppo_card_cnt%10;
 	assign nums = {oppo_ten, oppo_one, deck_ten, deck_one};
 	
+						
+
 endmodule
