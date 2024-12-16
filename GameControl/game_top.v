@@ -16,7 +16,8 @@ module GameControl_top #(
     input wire interboard_en,
     input wire [3:0] interboard_msg_type, // from interboard, used to advance state in FSM
     input wire [105:0] available_card,    // used to determine which cards can be drawn
-    input wire [5:0] picked_card,         // from memory, indicate the card that is clicked
+    input wire [8*18*6-1:0] map,
+    // input wire [5:0] picked_card,         // from memory, indicate the card that is clicked
     input wire [9:0] mouse_x,
     input wire [8:0] mouse_y,
     input wire [4:0] mouse_block_x,       // mouse information
