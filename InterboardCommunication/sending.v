@@ -11,6 +11,7 @@ module send_all(
     input wire [2:0] ctrl_sel_len,
     input wire ctrl_move_dir,
     
+    output wire send_ready,
     output wire Request_out,
     output wire [5:0] inter_data_out
 );
@@ -29,26 +30,9 @@ module send_all(
     reg en_send, en_send_next;                  // indicate whether to send data to other board, one-pulse
     // reg interboard_rst, interboard_rst_next;    // used to indicate single_send should send interboard_rst to other board, 
                                                 // always true after rst is asserted
-    wire ready;                                 // from single_send, indicate whether the transmission is done and ready for next round
+    wire bottom_ready;                                 // from single_send, indicate whether the transmission is done and ready for next round
     reg [5:0] cur_data, next_data;              // data to send to other board corresponding to each state
 
-    // wire delayed_rst;                           // delayed rst signal, used to reset the machine after 
-                                                // the interboard_rst is transmitted to other board
-    
-    // Used to store data to be sent, passed from GameControl
-    // reg [3:0] stored_msg_type, stored_msg_type_next;
-    // reg [4:0] stored_block_x, stored_block_x_next;
-    // reg [2:0] stored_block_y, stored_block_y_next;
-    // reg [5:0] stored_card, stored_card_next;
-    // reg [2:0] stored_sel_len, stored_sel_len_next;
-    // reg stored_move_dir, stored_move_dir_next;
-
-
-    // delay_n_cycle #(.n(10)) delay_rst(
-    //     .clk(clk),
-    //     .in(rst),
-    //     .out(delayed_rst)
-    // );
 
     send_single ss(
         .clk(clk),
@@ -58,18 +42,20 @@ module send_all(
         .Ack_in(Ack_in),
         .data_in(cur_data),
 
-        .ready(ready),
+        .ready(bottom_ready),
         .Request_out(Request_out),
         .inter_data_out(inter_data_out)
     );
+
+    assign send_ready = (cur_state == INIT);
 
     always@(posedge clk) begin
         if(rst || interboard_rst) begin
             cur_state <= INIT;
             cur_data <= 0;
-            // interboard_rst <= 0;
             en_send <= 0;
             
+            // interboard_rst <= 0;
             // stored_msg_type <= 0;
             // stored_block_x <= 0;
             // stored_block_y <= 0;
@@ -80,9 +66,9 @@ module send_all(
         else begin
             cur_state <= next_state;
             cur_data <= next_data;
-            // interboard_rst <= interboard_rst_next;
             en_send <= en_send_next;
 
+            // interboard_rst <= interboard_rst_next;
             // stored_msg_type <= stored_msg_type_next;
             // stored_block_x <= stored_block_x_next;
             // stored_block_y <= stored_block_y_next;
@@ -98,11 +84,11 @@ module send_all(
             en_send_next = 0;
         end
         else if(cur_state == INIT && ctrl_en ||
-                cur_state == STEP_1 && ready ||
-                cur_state == STEP_2 && ready ||
-                cur_state == STEP_3 && ready ||
-                cur_state == STEP_4 && ready ||
-                cur_state == STEP_5 && ready) begin
+                cur_state == STEP_1 && bottom_ready ||
+                cur_state == STEP_2 && bottom_ready ||
+                cur_state == STEP_3 && bottom_ready ||
+                cur_state == STEP_4 && bottom_ready ||
+                cur_state == STEP_5 && bottom_ready) begin
             en_send_next = 1;
         end
     end
@@ -112,47 +98,26 @@ module send_all(
         if(cur_state == INIT && ctrl_en && !en_send) begin // since ready will be pulled down one cycle after en_send is pulled up
             next_state = STEP_1;                           // and state will be changed at the same time as en_send
         end                                                // this try to prevent state transit early because ready is not pulled down in time
-        else if(cur_state == STEP_1 && ready && !en_send) begin
+        else if(cur_state == STEP_1 && bottom_ready && !en_send) begin
             next_state = STEP_2;
         end
-        else if(cur_state == STEP_2 && ready && !en_send) begin
+        else if(cur_state == STEP_2 && bottom_ready && !en_send) begin
             next_state = STEP_3;
         end
-        else if(cur_state == STEP_3 && ready && !en_send) begin
+        else if(cur_state == STEP_3 && bottom_ready && !en_send) begin
             next_state = STEP_4;
         end
-        else if(cur_state == STEP_4 && ready && !en_send) begin
+        else if(cur_state == STEP_4 && bottom_ready && !en_send) begin
             next_state = STEP_5;
         end
-        else if(cur_state == STEP_5 && ready && !en_send) begin
+        else if(cur_state == STEP_5 && bottom_ready && !en_send) begin
             next_state = STEP_6;
         end
-        else if(cur_state == STEP_6 && ready && !en_send) begin
+        else if(cur_state == STEP_6 && bottom_ready && !en_send) begin
             next_state = INIT;
         end
     end
 
-    // always@* begin
-    //     next_data = cur_data;
-    //     if(cur_state == STEP_1) begin
-    //         next_data = ctrl_msg_type;
-    //     end
-    //     else if(cur_state == STEP_2) begin
-    //         next_data = ctrl_block_x;
-    //     end
-    //     else if(cur_state == STEP_3) begin
-    //         next_data = ctrl_block_y;
-    //     end
-    //     else if(cur_state == STEP_4) begin
-    //         next_data = ctrl_card;
-    //     end
-    //     else if(cur_state == STEP_5) begin
-    //         next_data = ctrl_sel_len;
-    //     end
-    //     else if(cur_state == STEP_6) begin
-    //         next_data = ctrl_move_dir;
-    //     end
-    // end
     always@* begin                      // prepare the data need to be send in next cycle
         next_data = cur_data;
         if(cur_state == INIT) begin
@@ -174,6 +139,45 @@ module send_all(
             next_data = ctrl_move_dir;
         end
     end
+
+    // always@* begin
+    // wire delayed_rst;                           // delayed rst signal, used to reset the machine after 
+                                                // the interboard_rst is transmitted to other board
+    
+    // Used to store data to be sent, passed from GameControl
+    // reg [3:0] stored_msg_type, stored_msg_type_next;
+    // reg [4:0] stored_block_x, stored_block_x_next;
+    // reg [2:0] stored_block_y, stored_block_y_next;
+    // reg [5:0] stored_card, stored_card_next;
+    // reg [2:0] stored_sel_len, stored_sel_len_next;
+    // reg stored_move_dir, stored_move_dir_next;
+
+
+    // delay_n_cycle #(.n(10)) delay_rst(
+    //     .clk(clk),
+    //     .in(rst),
+    //     .out(delayed_rst)
+    // );
+    //     next_data = cur_data;
+    //     if(cur_state == STEP_1) begin
+    //         next_data = ctrl_msg_type;
+    //     end
+    //     else if(cur_state == STEP_2) begin
+    //         next_data = ctrl_block_x;
+    //     end
+    //     else if(cur_state == STEP_3) begin
+    //         next_data = ctrl_block_y;
+    //     end
+    //     else if(cur_state == STEP_4) begin
+    //         next_data = ctrl_card;
+    //     end
+    //     else if(cur_state == STEP_5) begin
+    //         next_data = ctrl_sel_len;
+    //     end
+    //     else if(cur_state == STEP_6) begin
+    //         next_data = ctrl_move_dir;
+    //     end
+    // end
 
     // always @(*) begin
     //     interboard_rst_next = interboard_rst;
@@ -199,7 +203,7 @@ module send_all(
     //     end
     // end
 
-    // ila_1 ila_inst(clk, en_send, Ack, cur_data, ready, Request, interboard_data, cur_state, ctrl_en);
+    // ila_1 ila_inst(clk, en_send, Ack, cur_data, bottom_ready, Request, interboard_data, cur_state, ctrl_en);
 
 endmodule
 
