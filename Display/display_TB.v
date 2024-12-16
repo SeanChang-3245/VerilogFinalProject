@@ -2,6 +2,7 @@ module Display_Test(
 	input wire clk, 
 	input wire rst,
 	input wire change_pat,
+	input wire change_sel,
 	inout PS2_CLK, 
 	inout PS2_DATA,
 
@@ -23,9 +24,13 @@ module Display_Test(
 	wire change_pat_button;
 	button_preprocess btn_pre_inst0( .clk(clk), .signal_in(change_pat), .signal_out(change_pat_button));
 
+	wire change_sel_button;
+	button_preprocess btn_pre_inst1( .clk(clk), .signal_in(change_sel), .signal_out(change_sel_button));
+
 	MouseInterface_top MouseIn_tp_inst0(
 		.clk(clk),
 		.rst(rst),
+		.interboard_rst(0),
 		.h_cnt(h_cnt),
 		.v_cnt(v_cnt),
 		.PS2_CLK(PS2_CLK),
@@ -36,6 +41,7 @@ module Display_Test(
 	Display_top display_inst0(
 		.clk(clk),
 		.rst(rst),
+		.interboard_rst(0),
 		.en_mouse_display(en_mouse_display),
 		.oppo_card_cnt(20),
 		.deck_card_cnt(30),
@@ -57,7 +63,14 @@ module Display_Test(
 	always @(*) begin
 		next_map = map;
 		if(change_pat_button) begin
-			next_map = map >> 6;
+			next_map = map >> 12;
+			next_map[863 -: 12] = {6'd53, 6'd52};
+		end
+	end
+	always @(*) begin
+		next_sel_card = sel_card;
+		if(change_sel_button) begin
+			next_sel_card = ~sel_card;
 		end
 	end
 	integer i, j;
@@ -65,9 +78,11 @@ module Display_Test(
 		if(rst) begin
 			for(i = 0; i < 144; i = i + 1) begin
 				map[i*6+5 -:6] <= i%55;
+				sel_card[i] <= 1;
 			end
 		end else begin
 			map <= next_map;
+			sel_card <= next_sel_card;
 		end
 	end
 endmodule
