@@ -13,6 +13,7 @@ module InterboardCommunication_top(
     input wire [5:0] ctrl_card,
     input wire [2:0] ctrl_sel_len,
     
+    output wire send_ready,
     output wire Request_out,
     output wire Ack_out,
     output wire [5:0] inter_data_out,
@@ -35,6 +36,7 @@ module InterboardCommunication_top(
     //      2.1 immediately reset all the modules, including communication_top, sending and receiving
 
     // Handle sending reset to other board
+
 
     // raw data that need to send, haven't consider rst_other
     wire ack_out_raw, request_out_raw;
@@ -85,6 +87,7 @@ module InterboardCommunication_top(
         .ctrl_card(ctrl_card),
         .ctrl_sel_len(ctrl_sel_len),
 
+        .send_ready(send_ready),
         .Request_out(request_out_raw),
         .inter_data_out(inter_data_out_raw)
     );

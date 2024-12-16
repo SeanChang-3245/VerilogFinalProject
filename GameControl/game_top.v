@@ -4,6 +4,8 @@ module GameControl_top #(
     input wire clk,
     input wire rst, 
     input wire interboard_rst,
+    input wire shift_en,                  // from Player_top, decide which operation the player is doing, shift or take/down
+    input wire send_ready,                // from InterboardCommunication, indicate the module is ready to transmit action done to other side
     input wire start_game,
     input wire rule_valid,
     input wire mouse_inblock,
