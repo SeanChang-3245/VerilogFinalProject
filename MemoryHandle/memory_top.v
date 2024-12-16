@@ -23,7 +23,7 @@ module MemoryHandle_top(
     input wire [2:0] interboard_sel_len,
 
     // to GameControl
-    output reg [5:0] picked_card,           // to GameControl, return the card that is clicked
+    // output reg [5:0] picked_card,           // to GameControl, return the card that is clicked
     output reg [105:0] available_card,      // to GameControl, return which cards can be drawn
 
     // to Display and RuleCheck
