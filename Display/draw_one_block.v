@@ -1,1 +1,0 @@
-// should handle the case where the block is selected, i.e., it should be highlighted.

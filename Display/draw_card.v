@@ -6,8 +6,11 @@ module Draw_card(
 	input wire [8*18-1:0] sel_card,
 	input wire [9:0] h_cnt,
 	input wire [9:0] v_cnt,
-	output wire [11:0] card_pixel
+	output reg [11:0] card_pixel
 );
+
+	localparam FRAME_COLOR = 12'hFEC;
+
 
 	reg [5:0] card_type;
 	wire [11:0] mem_card_pixel;
@@ -36,7 +39,7 @@ module Draw_card(
 	end
 	always @(*) begin
 		for(j = 0; j < 144; j = j + 1) begin
-			selected_card[j] = map[j];
+			selected_card[j] = sel_card[j];
 		end
 	end
 
@@ -48,13 +51,35 @@ module Draw_card(
 			x = (h_cnt-32)/32;
 		end
 	end
+	// (v_cnt >= 19 && v_cnt < 65) || (v_cnt >= 74 && v_cnt < 120) ||
+						//  (v_cnt >= 129 && v_cnt < 175) || (v_cnt >= 184 && v_cnt < 230)||
+						//  (v_cnt >= 239 && v_cnt < 285) || (v_cnt >= 294 && v_cnt < 340)||
+						//  (v_cnt >= 360 && v_cnt < 406) || (v_cnt >= 415 && v_cnt < 461)
 	always @(*) begin
-		if(v_cnt >= 19 && v_cnt < 349) begin
-			y = (v_cnt-19)/55;
+		if(v_cnt >= 19 && v_cnt < 65) begin
+			y = 0;
 		end
-		else if(v_cnt >= 360 && v_cnt < 461) begin
-			y = 6 + (v_cnt-360)/55;
-		end 
+		else if(v_cnt >= 74 && v_cnt < 120) begin
+			y = 1;
+		end
+		else if(v_cnt >= 129 && v_cnt < 175) begin
+			y = 2;
+		end
+		else if(v_cnt >= 184 && v_cnt < 230) begin
+			y = 3;
+		end
+		else if(v_cnt >= 239 && v_cnt < 285) begin
+			y = 4;
+		end
+		else if(v_cnt >= 294 && v_cnt < 340) begin
+			y = 5;
+		end
+		else if(v_cnt >= 360 && v_cnt < 406) begin
+			y = 6;
+		end
+		else if(v_cnt >= 415 && v_cnt < 461) begin
+			y = 7;
+		end
 		else begin
 			y = 0;
 		end
@@ -82,12 +107,12 @@ module Draw_card(
 	end
 	// decide card frame
 	always @(*) begin
-		if(selected_card[position]) begin
-			if(pixel_y < 2 && pixel_y >= 44 && pixel_y < 46) begin
-				card_pixel = 12'hFD3;
+		if(selected_card[position] && card_table[position]!=54) begin
+			if(pixel_y < 2 || pixel_y >= 44 && pixel_y < 46) begin
+				card_pixel = FRAME_COLOR;
 			end
-			else if(pixel_x < 2 && pixel_x >= 30 && pixel_x < 32)begin
-				card_pixel = 12'hFD3;
+			else if(pixel_x < 2 || pixel_x >= 30 && pixel_x < 32)begin
+				card_pixel = FRAME_COLOR;
 			end else begin
 				card_pixel = mem_card_pixel;
 			end

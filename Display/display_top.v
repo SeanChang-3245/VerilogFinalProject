@@ -46,6 +46,7 @@ module Display_top(
 		.clk_25MHz(clk_25MHz),
 		.rst(all_rst),
 		.map(map),
+		.sel_card(sel_card),
 		.h_cnt(vga_h_cnt),
 		.v_cnt(vga_v_cnt),
 		.card_pixel(card_pixel)
