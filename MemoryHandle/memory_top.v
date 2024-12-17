@@ -199,6 +199,7 @@ module MemoryHandle_top(
 			map_original <= {144{6'd54}};
 		 	available_card <= {106{1'b1}};
 			remove_position <= 8'd144;
+			deck_card_cnt <= 7'd106;
 		end
 		else begin
 			if(table_rst) begin
@@ -213,6 +214,7 @@ module MemoryHandle_top(
 			end
 			available_card <= available_card_next;
 			remove_position <= prev_position;
+			deck_card_cnt <= deck_cnt_next;
 		end
 	end
 
