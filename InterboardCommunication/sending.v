@@ -11,7 +11,7 @@ module send_all(
     input wire [2:0] ctrl_sel_len,
     input wire ctrl_move_dir,
     
-    output wire send_ready,
+    output wire inter_ready,
     output wire Request_out,
     output wire [5:0] inter_data_out
 );
@@ -47,7 +47,7 @@ module send_all(
         .inter_data_out(inter_data_out)
     );
 
-    assign send_ready = (cur_state == INIT);
+    assign inter_ready = (cur_state == INIT);
 
     always@(posedge clk) begin
         if(rst || interboard_rst) begin

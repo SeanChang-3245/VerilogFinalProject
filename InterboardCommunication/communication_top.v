@@ -5,7 +5,7 @@ module InterboardCommunication_top(
     input wire Request_in,
     input wire Ack_in,
     input wire [5:0] inter_data_in,
-    input wire ctrl_en,
+    input wire ctrl_en,                        // one-pulse signal from GameControl indicating there is data to send
     input wire ctrl_move_dir,
     input wire [4:0] ctrl_block_x,
     input wire [2:0] ctrl_block_y,
@@ -13,7 +13,7 @@ module InterboardCommunication_top(
     input wire [5:0] ctrl_card,
     input wire [2:0] ctrl_sel_len,
     
-    output wire send_ready,
+    output wire inter_ready,
     output wire Request_out,
     output wire Ack_out,
     output wire [5:0] inter_data_out,
@@ -87,7 +87,7 @@ module InterboardCommunication_top(
         .ctrl_card(ctrl_card),
         .ctrl_sel_len(ctrl_sel_len),
 
-        .send_ready(send_ready),
+        .inter_ready(inter_ready),
         .Request_out(request_out_raw),
         .inter_data_out(inter_data_out_raw)
     );
