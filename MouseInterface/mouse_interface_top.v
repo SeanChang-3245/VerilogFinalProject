@@ -84,14 +84,32 @@ module MouseInterface_top (
 		end
 	end
 	always @(*) begin
-		if(mouse_y >= 19 && mouse_y < 349) begin
-			y_block = (mouse_y-19)/55;
-		end
-		else if(mouse_y >= 360 && mouse_y < 461) begin
-			y_block = 6 + (mouse_y-360)/55;
-		end 
-		else begin
+		if(v_cnt >= 19 && v_cnt < 65) begin
 			y_block = 0;
+		end
+		else if(v_cnt >= 74 && v_cnt < 120) begin
+			y_block = 1;
+		end
+		else if(v_cnt >= 129 && v_cnt < 175) begin
+			y_block = 2;
+		end
+		else if(v_cnt >= 184 && v_cnt < 230) begin
+			y_block = 3;
+		end
+		else if(v_cnt >= 239 && v_cnt < 285) begin
+			y_block = 4;
+		end
+		else if(v_cnt >= 294 && v_cnt < 340) begin
+			y_block = 5;
+		end
+		else if(v_cnt >= 360 && v_cnt < 406) begin
+			y_block = 6;
+		end
+		else if(v_cnt >= 415 && v_cnt < 461) begin
+			y_block = 7;
+		end
+		else begin
+			y_block = 8;
 		end
 	end
 endmodule
