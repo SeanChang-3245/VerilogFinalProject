@@ -63,7 +63,7 @@ module P1_top (
     wire rule_valid;
 
     // InterboardCommunication output
-    wire send_ready;
+    wire inter_ready;
     wire interboard_rst;
     wire interboard_en;
     wire interboard_move_dir;
@@ -187,7 +187,7 @@ module P1_top (
         .ctrl_card(ctrl_card),
         .ctrl_sel_len(ctrl_sel_len),        
 
-        .send_ready(send_ready),
+        .inter_ready(inter_ready),
         .Request_out(Request_out),
         .Ack_out(Ack_out),
         .inter_data_out(inter_data_out),
