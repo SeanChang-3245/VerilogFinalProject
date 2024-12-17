@@ -196,13 +196,20 @@ module MemoryHandle_top(
 	always @(posedge clk) begin
 		if(all_rst) begin
 			map <= {144{6'd54}};
+			map_original <= {144{6'd54}};
 		 	available_card <= {106{1'b1}};
 			remove_position <= 8'd144;
 		end
 		else begin
-			map <= map_next;
 			if(table_rst) begin
 				map <= map_original;	// 因為自己手牌不會在對方turn的時候改變，所以在!transmit 的時候分開討論
+			end else begin
+				map <= map_next;
+			end
+			if(en && msg_type == STATE_TURN) begin
+				map_original <= map_next;
+			end else begin
+				map_original <= map_original;
 			end
 			available_card <= available_card_next;
 			remove_position <= prev_position;
