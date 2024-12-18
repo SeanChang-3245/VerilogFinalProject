@@ -1,4 +1,4 @@
-module Draw_card(
+module Display_card(
 	input wire clk,
 	input wire clk_25MHz,
 	input wire rst,
@@ -51,10 +51,6 @@ module Draw_card(
 			x = (h_cnt-32)/32;
 		end
 	end
-	// (v_cnt >= 19 && v_cnt < 65) || (v_cnt >= 74 && v_cnt < 120) ||
-						//  (v_cnt >= 129 && v_cnt < 175) || (v_cnt >= 184 && v_cnt < 230)||
-						//  (v_cnt >= 239 && v_cnt < 285) || (v_cnt >= 294 && v_cnt < 340)||
-						//  (v_cnt >= 360 && v_cnt < 406) || (v_cnt >= 415 && v_cnt < 461)
 	always @(*) begin
 		if(v_cnt >= 19 && v_cnt < 65) begin
 			y = 0;
