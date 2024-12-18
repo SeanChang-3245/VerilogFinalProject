@@ -6,18 +6,18 @@
 # Progress
 
 ## Done
-* MouseInterface
 
 ## Validated
+* MouseInterface
 * InterboardCommunication
 * Draw_once of Game Control 
+* MemoryHandle
 
 ## In Progress
-* GameControl
 * Display
+* GameControl
 
 ## Pending
-* MemoryHandle
 * RuleChecking
 
 ---
