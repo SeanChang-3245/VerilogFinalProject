@@ -6,18 +6,18 @@
 # Progress
 
 ## Done
-* MouseInterface
 
 ## Validated
+* MouseInterface
 * InterboardCommunication
 * Draw_once of Game Control 
+* MemoryHandle
 
 ## In Progress
-* GameControl
 * Display
+* GameControl
 
 ## Pending
-* MemoryHandle
 * RuleChecking
 
 ---
@@ -41,6 +41,18 @@
 ### draw_once
 * Since the operator `%` is too slow and will cause timing error, I have the write my own modulo function that rely operator on multiple clock cycle
 
+## Display
+
+### Display_card
+* Store `map` as 6-bit array in the module, making it simpe to use position to fetch the corrosponding message type
+* Use sel_card, current pixel_x, and pixel_y to determine whether the selected frame need to be shown or not.
+* Use h_cnt to calculate position x. range from 0 to 18
+* Use v_cnt to calculate position y. range from o to 8
+
+### Mem_pixel
+* Store 4 sets of number cards in 4 differnt memories, and 2 joke cards in 2 memories respectively.
+* Use `card_type`, `pixel_x`, and `pixel_y` to determine which memory and what the pixel_addr
+* When the card_type is `none (label as 54)`, display the color same as `background (68A)`.
 ---
 
 # Implementation Note

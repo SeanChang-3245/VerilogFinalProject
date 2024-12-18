@@ -21,14 +21,15 @@ module Display_top(
 );
 
     wire clk_25MHz;
-    clock_divider m2 (.clk(clk), .clk_div(clk_25MHz));
+    clock_divider #(.n(2)) m2 (.clk(clk), .clk_div(clk_25MHz));
 
 	wire all_rst;
 	assign all_rst = rst | interboard_rst;
-
 	reg [11:0] pixel;
 	wire [11:0] card_pixel;
-
+	wire [15:0] nums;
+	wire [9:0] vga_h_cnt, vga_v_cnt;
+	assign {h_cnt, v_cnt} = {vga_h_cnt, vga_v_cnt};
 	assign {vgaRed, vgaGreen, vgaBlue} = (valid) ? pixel : 12'h0;
     vga_controller vga_inst(
         .pclk(clk_25MHz),
@@ -36,18 +37,27 @@ module Display_top(
         .hsync(hsync),
         .vsync(vsync),
         .valid(valid),
-        .h_cnt(h_cnt),
-        .v_cnt(v_cnt)
+        .h_cnt(vga_h_cnt),
+        .v_cnt(vga_v_cnt)
     );
 
-	Draw_card draw_card_inst(
+	Display_card draw_card_inst(
 		.clk(clk),
 		.clk_25MHz(clk_25MHz),
 		.rst(all_rst),
 		.map(map),
-		.h_cnt(h_cnt),
-		.v_cnt(v_cnt),
+		.sel_card(sel_card),
+		.h_cnt(vga_h_cnt),
+		.v_cnt(vga_v_cnt),
 		.card_pixel(card_pixel)
+	);
+	
+	SevenSegment Sevenseg_inst0(
+		.clk(clk), 
+		.rst(all_rst), 
+		.nums(nums),
+		.display(DISPLAY),
+		.digit(DIGIT)
 	);
 	
 	
@@ -82,5 +92,13 @@ module Display_top(
 						 (v_cnt >= 129 && v_cnt < 175) || (v_cnt >= 184 && v_cnt < 230)||
 						 (v_cnt >= 239 && v_cnt < 285) || (v_cnt >= 294 && v_cnt < 340)||
 						 (v_cnt >= 360 && v_cnt < 406) || (v_cnt >= 415 && v_cnt < 461));
+
+	wire [3:0] deck_ten = deck_card_cnt/10;
+	wire [3:0] deck_one = deck_card_cnt%10;
+	wire [3:0] oppo_ten = oppo_card_cnt/10;
+	wire [3:0] oppo_one = oppo_card_cnt%10;
+	assign nums = {oppo_ten, oppo_one, deck_ten, deck_one};
+	
+						
 
 endmodule
