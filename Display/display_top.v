@@ -41,7 +41,7 @@ module Display_top(
         .v_cnt(vga_v_cnt)
     );
 
-	Draw_card draw_card_inst(
+	Display_card draw_card_inst(
 		.clk(clk),
 		.clk_25MHz(clk_25MHz),
 		.rst(all_rst),
