@@ -4,6 +4,8 @@ module GameControl_top #(
     input wire clk,
     input wire rst, 
     input wire interboard_rst,
+    input wire shift_en,                   // from Player_top, decide which operation the player is doing, shift or take/down, not one-pulsef
+    input wire inter_ready,                // from InterboardCommunication, indicate the module is ready to transmit action done to other side
     input wire start_game,
     input wire rule_valid,
     input wire mouse_inblock,
@@ -36,6 +38,9 @@ module GameControl_top #(
 
     output wire [8*18-1:0] sel_card       // to Display, indicate which cards are selected
 );
+    // Define player constant
+    localparam P1 = 0;
+    localparam P2 = 1;
 
 
     // Message type definition

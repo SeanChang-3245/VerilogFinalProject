@@ -47,3 +47,5 @@
 
 ## Game Control
 * Need to get data from `InterboardCommunication` to update state
+* Use matrix to check whether a card can be put back to hand
+* Need to check whether one card can be put down (the block must be empty)

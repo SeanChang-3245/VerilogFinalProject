@@ -33,6 +33,7 @@ module P1_top (
     wire draw_and_next;
     wire move_right, move_left;
     wire start_game;
+    wire shift_en = SW[5];
 
     button_preprocess bp1(.clk(clk), .signal_in(SW[15]), .signal_out(reset_table));
     button_preprocess bp2(.clk(clk), .signal_in(SW[0]), .signal_out(start_game));
@@ -62,6 +63,7 @@ module P1_top (
     wire rule_valid;
 
     // InterboardCommunication output
+    wire inter_ready;
     wire interboard_rst;
     wire interboard_en;
     wire interboard_move_dir;
@@ -115,6 +117,7 @@ module P1_top (
         .clk(clk),
         .rst(rst),
         .interboard_rst(interboard_rst),
+        .shift_en(shift_en),
         .start_game(start_game),
         .rule_valid(rule_valid),
         .mouse_inblock(mouse_inblock),
@@ -184,6 +187,7 @@ module P1_top (
         .ctrl_card(ctrl_card),
         .ctrl_sel_len(ctrl_sel_len),        
 
+        .inter_ready(inter_ready),
         .Request_out(Request_out),
         .Ack_out(Ack_out),
         .inter_data_out(inter_data_out),
