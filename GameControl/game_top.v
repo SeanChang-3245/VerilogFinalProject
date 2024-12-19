@@ -235,63 +235,63 @@ module GameControl_top #(
     end
 
     always@* begin
-        next_game_state <= cur_game_state;
+        next_game_state = cur_game_state;
         if(cur_game_state == `GAME_INIT && advance_state) begin
-            next_game_state <= `GAME_P1_INIT_DRAW;
+            next_game_state = `GAME_P1_INIT_DRAW;
         end
         else if(cur_game_state == `GAME_P1_INIT_DRAW && 
                 (init_draw_done || (interboard_en && interboard_msg_type == `STATE_TURN))) begin
-            next_game_state <= `GAME_P2_INIT_DRAW;
+            next_game_state = `GAME_P2_INIT_DRAW;
         end
         else if(cur_game_state == `GAME_P2_INIT_DRAW &&
-                (init_draw_done || (interboard_en) && interboard_msg_type == `STATE_TURN)) begin
-            next_game_state <= `GAME_P1_WAIT_IN;
+                (init_draw_done || (interboard_en && interboard_msg_type == `STATE_TURN))) begin
+            next_game_state = `GAME_P1_WAIT_IN;
         end
         else if(cur_game_state == `GAME_P1_WAIT_IN) begin
             if(shift_en && my_turn) begin
-                next_game_state <= `GAME_P1_SHIFT;
+                next_game_state = `GAME_P1_SHIFT;
             end
             else if(valid_card_take && my_turn && l_click) begin
-                next_game_state <= `GAME_P1_MOVE;
+                next_game_state = `GAME_P1_MOVE;
             end
             else if(switch_turn) begin
-                next_game_state <= `GAME_P2_WAIT_IN;
+                next_game_state = `GAME_P2_WAIT_IN;
             end
             else if(one_win || cheat_activate) begin
-                next_game_state <= `GAME_FIN;
+                next_game_state = `GAME_FIN;
             end
         end
         else if(cur_game_state == `GAME_P2_WAIT_IN) begin
             if(shift_en && my_turn) begin
-                next_game_state <= `GAME_P2_SHIFT;
+                next_game_state = `GAME_P2_SHIFT;
             end
             else if(valid_card_take && my_turn && l_click) begin
-                next_game_state <= `GAME_P2_MOVE;
+                next_game_state = `GAME_P2_MOVE;
             end
             else if(switch_turn) begin
-                next_game_state <= `GAME_P2_WAIT_IN;
+                next_game_state = `GAME_P2_WAIT_IN;
             end
             else if(one_win || cheat_activate) begin
-                next_game_state <= `GAME_FIN;
+                next_game_state = `GAME_FIN;
             end
         end
         else if(cur_game_state == `GAME_P1_MOVE && move_done) begin
-            next_game_state <= `GAME_P1_WAIT_IN;
+            next_game_state = `GAME_P1_WAIT_IN;
         end
         else if(cur_game_state == `GAME_P2_MOVE && move_done) begin
-            next_game_state <= `GAME_P2_WAIT_IN;
+            next_game_state = `GAME_P2_WAIT_IN;
         end
         else if(cur_game_state == `GAME_P1_SHIFT && (shift_done || shift_en == 0)) begin
-            next_game_state <= `GAME_P1_WAIT_IN;
+            next_game_state = `GAME_P1_WAIT_IN;
         end
         else if(cur_game_state == `GAME_P2_SHIFT && (shift_done || shift_en == 0)) begin
-            next_game_state <= `GAME_P2_WAIT_IN;
+            next_game_state = `GAME_P2_WAIT_IN;
         end
         else if(cur_game_state == `GAME_FIN && !advance_state) begin
-            next_game_state <= `GAME_FIN;
+            next_game_state = `GAME_FIN;
         end
         else if(cur_game_state == `GAME_FIN && advance_state) begin
-            next_game_state <= `GAME_INIT;
+            next_game_state = `GAME_INIT;
         end
     end
 
@@ -365,13 +365,13 @@ module GameControl_top #(
             ctrl_sel_len = move_ctrl_sel_len;
         end
         else if(cur_game_state == `GAME_P1_SHIFT || cur_game_state == `GAME_P2_SHIFT) begin
-            ctrl_en = shift_ctrl_en;
-            ctrl_move_dir = shift_ctrl_move_dir;
-            ctrl_block_x = shift_ctrl_block_x;
-            ctrl_block_y = shift_ctrl_block_y;
-            ctrl_msg_type = shift_ctrl_msg_type;
-            ctrl_card = shift_ctrl_card;
-            ctrl_sel_len = shift_ctrl_sel_len;
+            // ctrl_en = shift_ctrl_en;
+            // ctrl_move_dir = shift_ctrl_move_dir;
+            // ctrl_block_x = shift_ctrl_block_x;
+            // ctrl_block_y = shift_ctrl_block_y;
+            // ctrl_msg_type = shift_ctrl_msg_type;
+            // ctrl_card = shift_ctrl_card;
+            // ctrl_sel_len = shift_ctrl_sel_len;
         end
         else if(cur_game_state == `GAME_P1_WAIT_IN || cur_game_state == `GAME_P2_WAIT_IN) begin
             ctrl_en = switch_turn_ctrl_en;

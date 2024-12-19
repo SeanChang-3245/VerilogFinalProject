@@ -93,12 +93,46 @@ module Display_top(
 						 (v_cnt >= 239 && v_cnt < 285) || (v_cnt >= 294 && v_cnt < 340)||
 						 (v_cnt >= 360 && v_cnt < 406) || (v_cnt >= 415 && v_cnt < 461));
 
+	wire [3:0] deck_one, oppo_one;
+
+	mod_ten mod_ten_inst0(
+		.in(deck_card_cnt),
+		.out(deck_one)
+	);
+
+	mod_ten mod_ten_inst1(
+		.in(oppo_card_cnt),
+		.out(oppo_one)
+	);
+
 	wire [3:0] deck_ten = deck_card_cnt/10;
-	wire [3:0] deck_one = deck_card_cnt%10;
+	// wire [3:0] deck_one = deck_card_cnt%10;
 	wire [3:0] oppo_ten = oppo_card_cnt/10;
-	wire [3:0] oppo_one = oppo_card_cnt%10;
+	// wire [3:0] oppo_one = oppo_card_cnt%10;
 	assign nums = {oppo_ten, oppo_one, deck_ten, deck_one};
 	
 //	ila_0 ila_inst (clk, h_cnt, v_cnt, card_pixel, draw_card_inst.mem_pixel_inst.pixel_addr, draw_card_inst.mem_pixel_inst.pixel_x, draw_card_inst.mem_pixel_inst.pixel_y);			
+
+endmodule
+
+
+module mod_ten(
+	input wire [6:0] in,
+	output reg [3:0] out
+);
+
+	always @(*) begin
+		if(in < 10) out = in;
+		else if (in < 20) out = in - 10;
+		else if (in < 30) out = in - 20;
+		else if (in < 40) out = in - 30;
+		else if (in < 50) out = in - 40;
+		else if (in < 60) out = in - 50;
+		else if (in < 70) out = in - 60;
+		else if (in < 80) out = in - 70;
+		else if (in < 90) out = in - 80;
+		else if (in < 100) out = in - 90;
+		else out = in - 100;
+	end
 
 endmodule
