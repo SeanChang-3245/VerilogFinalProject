@@ -59,7 +59,7 @@ module MemoryHandle_top(
 	reg [6:0] oppo_cnt_next, oppo_cnt_cur;
 	reg [6:0] deck_cnt_next;
 
-	assign position = block_x + block_y*12;
+	assign position = block_x + block_y*18;
 	assign all_rst = interboard_rst | rst;
 	assign table_rst = (en && msg_type == STATE_RST_TABLE);
 
@@ -129,9 +129,9 @@ module MemoryHandle_top(
 		deck_cnt_next = deck_card_cnt;
 		if(en && msg_type == DECK_DRAW && card < 54) begin
 			if(available_card[card] == 0 && card < 52) begin
-				available_card[card+54] = 0;
+				available_card_next[card+54] = 0;
 			end else begin
-				available_card[card] = 0;
+				available_card_next[card] = 0;
 			end
 			deck_cnt_next = deck_card_cnt - 1;
 		end
