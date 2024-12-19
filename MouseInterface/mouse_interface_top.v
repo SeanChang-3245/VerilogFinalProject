@@ -77,35 +77,41 @@ module MouseInterface_top (
 	reg [2:0] y_block;
 	assign	mouse_block_x = x_block;
 	assign	mouse_block_y = y_block;
+	assign mouse_inblock = (mouse_x >= 32 && mouse_x < 608) && (
+							(mouse_y >= 19 && mouse_y < 65) || (mouse_y >= 74 && mouse_y < 120) ||
+							(mouse_y >= 129 && mouse_y < 175) || (mouse_y >= 184 && mouse_y < 230) ||
+							(mouse_y >= 239 && mouse_y < 285) || (mouse_y >= 294 && mouse_y < 340) ||
+							(mouse_y >= 360 && mouse_y < 406) || (mouse_y >= 415 && mouse_y < 461) );
+							
 	always @(*) begin
 		x_block = 0;
-		if(mouse_x >= 32 && mouse_x < 607) begin
+		if(mouse_x >= 32 && mouse_x < 608) begin
 			x_block = (mouse_x-32)/32;
 		end
 	end
 	always @(*) begin
-		if(v_cnt >= 19 && v_cnt < 65) begin
+		if(mouse_y >= 19 && mouse_y < 65) begin
 			y_block = 0;
 		end
-		else if(v_cnt >= 74 && v_cnt < 120) begin
+		else if(mouse_y >= 74 && mouse_y < 120) begin
 			y_block = 1;
 		end
-		else if(v_cnt >= 129 && v_cnt < 175) begin
+		else if(mouse_y >= 129 && mouse_y < 175) begin
 			y_block = 2;
 		end
-		else if(v_cnt >= 184 && v_cnt < 230) begin
+		else if(mouse_y >= 184 && mouse_y < 230) begin
 			y_block = 3;
 		end
-		else if(v_cnt >= 239 && v_cnt < 285) begin
+		else if(mouse_y >= 239 && mouse_y < 285) begin
 			y_block = 4;
 		end
-		else if(v_cnt >= 294 && v_cnt < 340) begin
+		else if(mouse_y >= 294 && mouse_y < 340) begin
 			y_block = 5;
 		end
-		else if(v_cnt >= 360 && v_cnt < 406) begin
+		else if(mouse_y >= 360 && mouse_y < 406) begin
 			y_block = 6;
 		end
-		else if(v_cnt >= 415 && v_cnt < 461) begin
+		else if(mouse_y >= 415 && mouse_y < 461) begin
 			y_block = 7;
 		end
 		else begin
