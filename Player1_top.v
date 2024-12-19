@@ -209,13 +209,13 @@ module P1_top (
         .interboard_sel_len(interboard_sel_len)
     );
 
-    RuleCheck_top rule_check_top_inst(
-        .clk(clk),
-        .rst(rst),
-        .interboard_rst(interboard_rst),
-        .map(map),
-        .rule_valid(rule_valid)
-    );
+    // RuleCheck_top rule_check_top_inst(
+    //     .clk(clk),
+    //     .rst(rst),
+    //     .interboard_rst(interboard_rst),
+    //     .map(map),
+    //     .rule_valid(rule_valid)
+    // );
 
     MemoryHandle_top memory_handle_top_inst(
         .clk(clk),

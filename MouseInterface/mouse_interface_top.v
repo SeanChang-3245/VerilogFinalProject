@@ -86,7 +86,7 @@ module MouseInterface_top (
 	always @(*) begin
 		x_block = 0;
 		if(mouse_x >= 32 && mouse_x < 608) begin
-			x_block = (mouse_x-32)/32;
+			x_block = (mouse_x-32) >> 5;
 		end
 	end
 	always @(*) begin
