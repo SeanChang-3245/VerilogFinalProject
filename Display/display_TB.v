@@ -64,7 +64,7 @@ module Display_Test(
 		next_map = map;
 		if(change_pat_button) begin
 			next_map = map >> 12;
-			next_map[863 -: 12] = {6'd53, 6'd52};
+			next_map[863 -: 12] = {6'd52, 6'd14};
 		end
 	end
 	always @(*) begin
