@@ -164,15 +164,15 @@ module MemoryHandle_top(
 		if(en && msg_type == TABLE_SHIFT) begin
 			if(move_dir && (block_x + sel_len -1) < 18) begin
 				map_next[position*6+5 -: 6] = 54;
-				for(i = position; i < position + sel_len; i = i + 1) begin
-					map_next[(i+1)*6+5 -: 6] = map[i*6+5 -: 6];
-				end
+				// for(i = position; i < position + sel_len; i = i + 1) begin
+				// 	map_next[(i+1)*6+5 -: 6] = map[i*6+5 -: 6];
+				// end
 			end
 			else if(!move_dir && (block_x > 0)) begin
 				map_next[position*6+5 -: 6] = 54;
-				for(i = position; i < position + sel_len; i = i + 1) begin
-					map_next[(i-1)*6+5 -: 6] = map[i*6+5 -: 6];
-				end
+				// for(i = position; i < position + sel_len; i = i + 1) begin
+				// 	map_next[(i-1)*6+5 -: 6] = map[i*6+5 -: 6];
+				// end
 			end
 		end
 		else if(transmit && en) begin

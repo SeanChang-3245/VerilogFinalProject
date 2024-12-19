@@ -117,21 +117,28 @@ module P1_top (
         .clk(clk),
         .rst(rst),
         .interboard_rst(interboard_rst),
+
         .shift_en(shift_en),
         .start_game(start_game),
         .rule_valid(rule_valid),
-        .mouse_inblock(mouse_inblock),
-        .five_r_click(cheat_activate),
         .move_left(move_left),
         .move_right(move_right),
         .reset_table_raw(reset_table),
         .done_and_next(done_and_next),
         .draw_and_next(draw_and_next),
+
+        .oppo_card_cnt(oppo_card_cnt),
+        .available_card(available_card),
+        .map(map),
+
+        .inter_ready(inter_ready),
         .interboard_en(interboard_en),
         .interboard_msg_type(interboard_msg_type),
-        .available_card(available_card),
-        .picked_card(picked_card),
+        // .picked_card(picked_card),
+
         .l_click(l_click),
+        .five_r_click(cheat_activate),
+        .mouse_inblock(mouse_inblock),
         .mouse_x(mouse_x),
         .mouse_y(mouse_y),
         .mouse_block_x(mouse_block_x),
@@ -232,7 +239,7 @@ module P1_top (
         .interboard_card(interboard_card),
         .interboard_sel_len(interboard_sel_len),
 
-        .picked_card(picked_card),
+        // .picked_card(picked_card),
         .available_card(available_card),
 
         .oppo_card_cnt(oppo_card_cnt),

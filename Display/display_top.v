@@ -99,6 +99,6 @@ module Display_top(
 	wire [3:0] oppo_one = oppo_card_cnt%10;
 	assign nums = {oppo_ten, oppo_one, deck_ten, deck_one};
 	
-	ila_0 ila_inst (clk, h_cnt, v_cnt, card_pixel, draw_card_inst.mem_pixel_inst.pixel_addr, draw_card_inst.mem_pixel_inst.pixel_x, draw_card_inst.mem_pixel_inst.pixel_y);			
+//	ila_0 ila_inst (clk, h_cnt, v_cnt, card_pixel, draw_card_inst.mem_pixel_inst.pixel_addr, draw_card_inst.mem_pixel_inst.pixel_x, draw_card_inst.mem_pixel_inst.pixel_y);			
 
 endmodule

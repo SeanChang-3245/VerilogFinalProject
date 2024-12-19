@@ -15,7 +15,6 @@ module draw_once(
     localparam CHOOSE = 2;
     localparam FIN = 3;
 
-    reg [3:0] wait_mod_cnt, wait_mod_cnt_next;
     reg [1:0] cur_state, next_state;
     reg [6:0] rnd, rnd_next;
     reg [6:0] drawn_card_idx_next;
@@ -47,9 +46,9 @@ module draw_once(
 
     assign done = (cur_state == FIN);
     assign ready = (cur_state == IDLE);
-    a_mod_b amb(.clk(clk), .rst(rst), .interboard_rst(rst), 
-                .start(mod_start), .ready(mod_ready), .done(mod_done),
-                .a(rnd), .b(available_card_num), .ans(pick_arr_idx));
+    a_mod_b a_mod_b_inst (.clk(clk), .rst(rst), .interboard_rst(rst), 
+                          .start(mod_start), .ready(mod_ready), .done(mod_done),
+                          .a(rnd), .b(available_card_num), .ans(pick_arr_idx));
     // assign pick_arr_idx = rnd % available_card_num;
     // assign pick_arr_idx = rnd;
 
@@ -57,14 +56,12 @@ module draw_once(
         if(rst || interboard_rst) begin
             cur_state <= IDLE;
             drawn_card_idx <= 110;
-            wait_mod_cnt <= 0;
             rnd <= 0;
             mod_start <= 0;
         end 
         else begin
             cur_state <= next_state;
             drawn_card_idx <= drawn_card_idx_next;
-            wait_mod_cnt <= wait_mod_cnt_next;
             rnd <= rnd_next;
             mod_start <= mod_start_next;
         end       

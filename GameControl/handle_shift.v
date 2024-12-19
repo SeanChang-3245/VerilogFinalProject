@@ -15,6 +15,7 @@ module handle_shift#(
     input wire inter_ready,
 
     output wire shift_done,
+    output wire [8*18-1:0] shift_sel_card,
 
     output wire shift_ctrl_en,
     output wire shift_ctrl_move_dir,

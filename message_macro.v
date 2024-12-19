@@ -11,3 +11,4 @@
 `define STATE_TURN 6
 `define STATE_RST_TABLE 7
 `define STATE_CHEAT 8
+`define STATE_I_WIN 9

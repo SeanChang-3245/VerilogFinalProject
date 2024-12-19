@@ -10,9 +10,10 @@ module find_draw_card_place(
     integer i;
 
     always@* begin
+        card_place = 35;
         for(i = 0; i <= 35; i = i+1) begin
             if(map[8*18*6-1 - i*6 -: 6] == NO_CARD) begin
-                card_place = i;
+                card_place = 35-i;
             end
         end
     end
