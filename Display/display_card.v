@@ -47,8 +47,8 @@ module Display_card(
 	assign position = (x + y*18);
 	always @(*) begin
 		x = 0;
-		if(h_cnt >= 32 && h_cnt < 607) begin
-			x = (h_cnt-32)/32;
+		if(h_cnt >= 32 && h_cnt < 608) begin
+			x = (h_cnt-32) >> 5;
 		end
 	end
 	always @(*) begin
@@ -87,8 +87,8 @@ module Display_card(
 	// PIXEL X GEN
 	always @(*) begin
 		pixel_x = 0;
-		if(h_cnt >= 32 && h_cnt < 607) begin
-			pixel_x = h_cnt - 32 - x*32;
+		if(h_cnt >= 32 && h_cnt < 608) begin
+			pixel_x = h_cnt - 32 - (x << 5);
 		end
 	end
 	// PIXEL Y GEN

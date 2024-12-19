@@ -87,7 +87,7 @@ module Display_top(
 		end
 	end
 	// card_valid control
-	assign card_valid = (h_cnt >= 32 && h_cnt < 607) && 
+	assign card_valid = (h_cnt >= 32 && h_cnt < 608) && 
 						((v_cnt >= 19 && v_cnt < 65) || (v_cnt >= 74 && v_cnt < 120) ||
 						 (v_cnt >= 129 && v_cnt < 175) || (v_cnt >= 184 && v_cnt < 230)||
 						 (v_cnt >= 239 && v_cnt < 285) || (v_cnt >= 294 && v_cnt < 340)||
@@ -99,6 +99,6 @@ module Display_top(
 	wire [3:0] oppo_one = oppo_card_cnt%10;
 	assign nums = {oppo_ten, oppo_one, deck_ten, deck_one};
 	
-						
+	ila_0 ila_inst (clk, h_cnt, v_cnt, card_pixel, draw_card_inst.mem_pixel_inst.pixel_addr, draw_card_inst.mem_pixel_inst.pixel_x, draw_card_inst.mem_pixel_inst.pixel_y);			
 
 endmodule

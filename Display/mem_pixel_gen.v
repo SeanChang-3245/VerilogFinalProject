@@ -22,15 +22,15 @@ module Mem_pixel(
 		pixel_addr = 0;
 		if(card_type < 13) begin
 			pixel_addr = card_type*32*46 + pixel_y*32 + pixel_x;
-		end else if(card_type < 26) begin
+		end else if(card_type >= 13 && card_type < 26) begin
 			pixel_addr = (card_type-13)*32*46 + pixel_y*32 + pixel_x;
-		end else if(card_type < 39) begin
+		end else if(card_type >= 26 &&card_type < 39) begin
 			pixel_addr = (card_type-26)*32*46 + pixel_y*32 + pixel_x;
-		end else if(card_type < 52) begin
+		end else if(card_type >= 39 && card_type < 52) begin
 			pixel_addr = (card_type-39)*32*46 + pixel_y*32 + pixel_x;
-		end else if(card_type < 53) begin
+		end else if(card_type == 52) begin
 			pixel_addr = pixel_y*32 + pixel_x;
-		end else if(card_type < 54) begin
+		end else if(card_type == 53) begin
 			pixel_addr = pixel_y*32 + pixel_x;
 		end
 	end
@@ -39,18 +39,20 @@ module Mem_pixel(
 		// card_pixel = 12'h68A;
 		if(card_type < 13) begin
 			card_pixel = num_pixel[0];
-		end else if(card_type < 26) begin
+		end else if(card_type >= 13 && card_type < 26) begin
 			card_pixel = num_pixel[1];
-		end else if(card_type < 39) begin
+		end else if(card_type >= 26 &&card_type < 39) begin
 			card_pixel = num_pixel[2];
-		end else if(card_type < 52) begin
+		end else if(card_type >= 39 && card_type < 52) begin
 			card_pixel = num_pixel[3];
-		end else if(card_type < 53) begin
+		end else if(card_type == 52) begin
 			card_pixel = face_pixel[0];
-		end else if(card_type < 54) begin
+		end else if(card_type == 53) begin
 			card_pixel = face_pixel[1];
-		end else begin
+		end else if(card_type == 54)begin
 			card_pixel = 12'h68A;
+		end else begin
+			card_pixel = 12'hfff;
 		end
 	end
 endmodule
